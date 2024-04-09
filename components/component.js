@@ -1,3 +1,4 @@
+// Component de bas extends de tout les component
 export default class Component {
     constructor(type) {
         this.type = type;
@@ -11,10 +12,6 @@ export default class Component {
         this.props.className = classList.join(" ")
     }
     appendChild(child) {
-        // if (Array.isArray(child)){
-        //     this.children = child;
-        //     return;
-        // }
         this.children.push(child);
     }
 }

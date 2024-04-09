@@ -1,4 +1,5 @@
 import Component from "./component.js"
+// Component list permettant de creer un element List
 export default class List extends Component {
     constructor() {
         super("ul")
