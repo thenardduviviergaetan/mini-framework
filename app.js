@@ -1,3 +1,5 @@
+import List from "./components/list.js"
+
 // Create virtual node
 const vNode = (type, props, ...children) => ({ type, props, children });
 
@@ -47,6 +49,7 @@ const diff = (v1, v2) => {
 // Apply patches to the real DOM
 const patch = (node, patches) => {
     for (const patch of patches) {
+        console.log(patch.type);
         switch (patch.type) {
             case 'REMOVE':
                 node.remove();
@@ -63,17 +66,82 @@ const patch = (node, patches) => {
                 }
                 break;
             case 'CHILDREN':
-                node.textContent = patch.value.join('');
+                node.textContent = '';
+
+                patch.value.map((child) => {
+                    node.appendChild(render(child));
+                })
+
                 break;
         }
     }
 };
 
-// Usage example
-const v1 = vNode('div', { id: 'app' }, 'Hello, world!');
-const node = render(v1);
-document.body.appendChild(node);
 
-const v2 = vNode('div', { id: 'app' }, 'Goodbye, world!');
-const patches = diff(v1, v2);
-patch(node, patches);
+// // Create a new list
+// let myList = new List();
+
+// // Add elements to the list
+// myList.addElement("First item");
+// myList.addElement("Second item");
+// myList.addElement("Third item");
+
+// // Render the list
+// let renderedList = render(myList);
+
+// // Append the list to the body of the document
+// document.body.appendChild(renderedList);
+
+// // Create a new list
+// let myList2 = new List();
+
+// // Add elements to the list
+// myList2.addElement("First item");
+// myList2.addElement("Second item");
+// myList2.addElement("Third item");
+// myList2.addElement("Fourth item");
+
+// // Render the list
+// let renderedList2 = render(myList2);
+// console.log(renderedList2);
+
+// // Compare the two lists
+// const patches = diff(myList, myList2);
+
+// // Apply the patches to the real DOM
+// patch(renderedList, patches);
+
+// const v1 = vNode('div', {id: 'app'}, "hello")
+
+// const node = render(v1)
+
+// document.body.appendChild(node)
+
+// const v2 = vNode('div', {id: 'app2'}, "Bye", "aaaaa")
+
+// const patches = diff(v1, v2)
+
+// patch(node, patches)
+
+
+// const p = vNode('p', { id: 'p' }, "Hello")
+// const pp = vNode('pp', { id: 'pp' }, "world", "test")
+
+// const container = vNode('div', { id: 'container' }, pp, p)
+// const c = vNode('div', { id: 'a' }, "aaaaaaaaaaaaaaa")
+
+// const v1 = vNode('div', { id: 'app' }, container, "Hello", vNode('a', {href: "https://google.com"}, 'link'))
+
+// const node = render(v1)
+
+// document.body.appendChild(node)
+
+// const p2 = vNode('p', { id: 'p' }, "Bye")
+
+// const container2 = vNode('div', { id: 'container' }, p2)
+
+// const v2 = vNode('div', { id: 'app' }, "tres", container2)
+
+// const patches = diff(v1, v2)
+
+// patch(node, patches)
