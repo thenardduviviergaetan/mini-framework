@@ -10,16 +10,16 @@ export default class Input extends Component{
             this.props.value = value
         }
     }
-    onClick(f){
-        this.props.onclick = f;
+    onClick(func){
+        this.props.onclick = func;
     }
-    onChange(f){
-        this.props.onchange = f;
+    onChange(func){
+        this.props.onchange = func;
     }
-    ondblClick(f){
-        this.props.ondblclick = f;
+    ondblClick(func){
+        this.props.ondblclick = func;
     }
-    onSubmit(f){
-        this.props.onsubmit = f
+    onSubmit(func){
+        this.props.onsubmit = func;
     }
 }
