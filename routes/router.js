@@ -1,10 +1,24 @@
 export default class Router {
-    constructor() {
+    constructor(win) {
+        this.win = win;
         this.routes = [];
         window.addEventListener('popstate', async (event) => {
             event.preventDefault();
             this._loadInitialRoute();
         })
+    }
+
+    init(routes) {
+        this.routes = Object.keys(routes).map(route => {
+            return {
+                path: route,
+                callback: (params) => {
+                    this.win.renderPage(routes[route].generatePage())
+                }
+            }
+        })
+        console.log(this.routes);
+        this._loadInitialRoute()
     }
     addRoute(route, f) {
         this.routes.push({ path: route, callback: f, params: {} })
@@ -40,6 +54,7 @@ export default class Router {
         this.loadRoute(pathSegs);
     }
     loadRoute(urlSegs) {
+        console.log(urlSegs);
         const matchedRoute = this._matchUrlToRoute(urlSegs);
         if (!matchedRoute) {
             throw new Error(`Route not found ${urlSegs}`);
