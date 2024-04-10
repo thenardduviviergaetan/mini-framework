@@ -14,7 +14,10 @@ export default class Form extends Component{
     newTextinput(id,label,...className){
 
     }
-    newcheckbox(id,label,value,...className){
+    newCheckbox(id,label,value,...className){
+        
+    }
+    newRadioSelecteur(id,label,tabValue,...className){
         
     }
     onSubmit(func){
