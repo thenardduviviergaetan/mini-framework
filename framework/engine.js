@@ -1,32 +1,40 @@
-
 // Create virtual node
 export const vNode = (type, props, ...children) => ({ type, props, children });
-
+/**
+ * Function to created nested components
+ * The first element of each array will be the parent Node of the following elements in 
+ * each array. 
+ * @param {Array} type - HTML type
+ * @param {Array} props - HTML properties
+ * @param {Array} content - HTML child
+ * @param {number} childNumber - number of children nested in the parent
+*/
+export const createNestedChild = (...vNodes) => {
+    let children = [];
+    for (let i = 1; i < vNodes.length; i++) {
+        children.push(vNodes[i])
+    }
+    return vNode(vNodes[0].type, vNodes[0].props, ...children)
+}
 // Render virtual node
 export const render = (vNode) => {
     if (typeof vNode === 'string') {
         return document.createTextNode(vNode);
     }
-
     const node = document.createElement(vNode.type);
-
     if (typeof vNode.props === 'object' && vNode.props !== null) {
         for (const [prop, value] of Object.entries(vNode.props)) {
             node[prop] = value;
         }
     }
-
     for (const child of vNode.children || []) {
         node.appendChild(render(child));
     }
-
     return node;
 };
-
 // Compare new virtual node with old virtual node
 export const diff = (v1, v2) => {
     const patches = [];
-
     if (typeof v1 === 'string' || typeof v2 === 'string') {
         if (v1 !== v2) {
             patches.push({ type: 'TEXT', value: v2 });
@@ -41,10 +49,8 @@ export const diff = (v1, v2) => {
             patches.push({ type: 'CHILDREN', value: v2.children });
         }
     }
-
     return patches;
 };
-
 // Apply patches to the real DOM
 export const patch = (node, patches) => {
     for (const patch of patches) {
@@ -65,14 +71,14 @@ export const patch = (node, patches) => {
                 }
                 break;
             case 'CHILDREN':
-                
-                node.textContent = '';
 
+                node.textContent = '';
                 patch.value.map((child) => {
                     node.appendChild(render(child));
                 })
-
                 break;
         }
     }
 };
+//automate the all engine system to create a component
+

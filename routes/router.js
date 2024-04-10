@@ -1,4 +1,4 @@
-export class Router {
+export default class Router {
     constructor() {
         this.routes = [];
         window.addEventListener('popstate', async (event) => {
