@@ -1,4 +1,5 @@
-import List from "./components/list.js"
+import Form from "./components/form.js";
+import Input from "./components/input.js"
 
 // Create virtual node
 const vNode = (type, props, ...children) => ({ type, props, children });
@@ -145,3 +146,47 @@ const patch = (node, patches) => {
 // const patches = diff(v1, v2)
 
 // patch(node, patches)
+
+// const input1 = new Input("text")
+// input1.label("Test")
+// input1.appendChild("Button")
+// input1.onClick((e)=>{
+//     // console.log(e)
+//     console.log("test")
+// })
+// input1.onSubmit((e)=>{
+//     console.log("value")
+// })
+// const node = render(input1);
+// console.log(input1)
+// document.body.appendChild(node);
+
+
+// const input2 = new Input("text")
+// input2.label("Test2")
+// input2.appendChild("Button")
+// input2.ondblClick(()=>{
+//     console.log("test2")
+// })
+// input2.onSubmit(()=>{
+//     console.log("value")
+// })
+
+// const patches = diff(input1, input2);
+// patch(node, patches);
+const input1 = new Input("text")
+// const input2 = new Input("submit")
+const form = new Form()
+form.newFormElement(input1,"Test")
+const node = render(form);
+form.onSubmit((event)=>{
+    event.preventDefault();
+    return false;})
+form.onInput((event) =>{
+    event.preventDefault();
+    console.log(event)
+    console.log("form")
+    return false;
+})
+console.log(form)
+document.body.appendChild(node);
