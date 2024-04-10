@@ -11,6 +11,12 @@ export default class Form extends Component{
         divElement.appendChild(element);
         this.appendChild(divElement);
     }
+    newTextinput(id,label,...className){
+
+    }
+    newcheckbox(id,label,value,...className){
+        
+    }
     onSubmit(func){
         this.props.onsubmit = func;
     }
