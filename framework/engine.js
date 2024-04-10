@@ -4,10 +4,7 @@ export const vNode = (type, props, ...children) => ({ type, props, children });
  * Function to created nested components
  * The first element of each array will be the parent Node of the following elements in 
  * each array. 
- * @param {Array} type - HTML type
- * @param {Array} props - HTML properties
- * @param {Array} content - HTML child
- * @param {number} childNumber - number of children nested in the parent
+ * @param {Array<VirtualNode>} vNodes - list of DOM virtual Nodes
 */
 export const createNestedChild = (...vNodes) => {
     let children = [];
