@@ -6,7 +6,7 @@ export default class Input extends Component{
         super("input")
         this.props.type = inputType !== undefined ? inputType : "button"
     }
-    label(value){
+    value(value){
         if (this.props.type == "button"){
             this.props.value = value
         }

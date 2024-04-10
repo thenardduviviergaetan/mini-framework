@@ -9,7 +9,11 @@ export default class Component {
         this.props.id = id;
     }
     className(...classList) {
-        this.props.className = classList.join(" ")
+        if (classList.length === 1 && Array.isArray(classList[0])) {
+            this.props.className = classList[0].join(" ")
+        } else {
+            this.props.className = classList.join(" ")
+        }
     }
     appendChild(child) {
         this.children.push(child);
