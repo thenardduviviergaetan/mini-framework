@@ -18,11 +18,8 @@ export default class HomePage extends Page {
         link.props.id = "link"
         // link.props.href = "/test"
         link.props.value = "Go to Test"
-        link.onClick((e) =>{
-            e.preventDefault();
-            console.log(e);
-            this.win.router.navigateTo("/test")
-        } )
+        link.onClick(() => this.win.router.navigateTo("/test")
+        )
 
 
 

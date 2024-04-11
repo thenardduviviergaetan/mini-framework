@@ -1,15 +1,14 @@
 export default class Router {
     constructor(win) {
         this.win = win;
-        this.routes = [];
+        this.win.router = this;
         window.addEventListener('popstate', async (event) => {
             event.preventDefault();
-            this._loadInitialRoute();
         })
     }
 
     init(routes) {
-        this.routes = Object.keys(routes).map(route => {
+        this.win.routes = Object.keys(routes).map(route => {
             console.log(routes[route].generatePage());
             return {
                 path: route,
@@ -18,14 +17,14 @@ export default class Router {
                 }
             }
         })
-        console.log(this.routes);
+        console.log(this.win.routes);
         this._loadRoute()
     }
   
     _loadRoute() {
         const pathname = window.location.pathname;
         console.log(pathname);
-        const route = this.routes.find(r => r.path === pathname);
+        const route = this.win.routes.find(r => r.path === pathname);
         if (!route) {
             console.log("problem");
             return;

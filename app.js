@@ -4,8 +4,6 @@ import HomePage from "./pages/home.js"
 import TestPage from "./pages/test.js"
 
 const win = new Framework()
-const router = new Router(win)
-
 
 const home = new HomePage(win)
 const test = new TestPage(win)
@@ -16,12 +14,5 @@ const routes = {
     "/test": test
 }
 
-// console.log(win.oldNode);
+const router = new Router(win)
 router.init(routes)
-
-// document.getElementById('link').addEventListener('click', (event) => {
-//     event.preventDefault()
-//     router.navigateTo("/test")
-// })
-
-// router.navigateTo("/test")

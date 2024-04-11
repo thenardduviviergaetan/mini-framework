@@ -5,7 +5,8 @@ export default class Framework {
     this._components = [];
     this.routes = {};
     this.oldNode = {};
-    this.router = new Router();
+    // this.router = new Router();
+    this.router = null;
     this._init();
   }
   _init() {
