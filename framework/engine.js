@@ -1,5 +1,8 @@
+import Component from "../components/component.js";
+
 // Create virtual node
-export const vNode = (type, props, ...children) => ({ type, props, children });
+// export const vNode = (type, props, ...children) => ({ type, props, children });
+export const vNode = (type, props, ...children) => (new Component(type, props, children));
 /**
  * Function to created nested components
  * The first element of each array will be the parent Node of the following elements in 

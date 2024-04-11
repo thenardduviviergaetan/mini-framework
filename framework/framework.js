@@ -9,7 +9,7 @@ export default class Framework {
     this._init();
   }
   _init() {
-    this.oldNode = vNode("div", { id: "container" }, ...this._components)
+    this.oldNode = vNode("main", { id: "container" }, ...this._components)
     const initNode = render(this.oldNode);
     document.body.appendChild(initNode);
   }

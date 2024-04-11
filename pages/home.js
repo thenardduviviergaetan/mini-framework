@@ -2,40 +2,64 @@ import Form from "../components/form.js";
 import Input from "../components/input.js";
 import { Page } from "../components/page.js";
 import { vNode, createNestedChild } from "../framework/engine.js";
-import Input from "../components/input.js";
+import List from "../components/list.js";
 
 
 export default class HomePage extends Page {
     constructor(win) {
-        super()
-        this.win = win
+        super(win)
     }
     //renders the concerned page
     generatePage() {
-        const div = vNode("div", { id: "container" })
-        const h1 = vNode("h1", { id: "test" }, "This is a Form Title")
-        const p = vNode("p", { id: "test" }, "This is a text cool, you need to be prepared to all bugs")
 
-        const link = new Input("button")
-        link.props.id = "link"
-        // link.props.href = "/test"
-        link.props.value = "Go to Test"
-        link.onClick(() => this.win.router.navigateTo("/test")
-        )
+        const h1 = vNode("h1", { id: "title" }, 'TODO List')
+
+        const form = new Form({
+            id: "form",
+            name: "form",
+        })
+        form.onSubmit((data) => {
+            getFormValues(data)
+        })
+
+        const input = new Input({
+            type: "text",
+            name: "task",
+            id: "task",
+            placeholder: "Add a task"
+        })
+
+        const list = new List({ id: "list", name: "list" })
+
+        const links = vNode('div', { id: 'links' })
+        const link = new Input({
+            type: "button",
+            name: "l1",
+            value: "Go to test",
+        })
+        link.onClick(() => this.win.router.navigateTo("/test"))
+
+        const link2 = new Input({
+            type: "button",
+            name: "l2",
+            value: "Go to home",
+        })
+        link2.onClick(() => this.win.router.navigateTo("/"))
 
 
+        const link3 = new Input({
+            type: "button",
+            name: "l3",
+            value: "Go to about",
+        })
+        link3.onClick(() => this.win.router.navigateTo("/about"))
 
+        const t = createNestedChild(form, input)
+        const l = createNestedChild(links, link, link2, link3)
 
+        const todo = createNestedChild(this.root, h1, t, list, l)
 
-        // const form = new Form()
-        // const input = new Input("text", "txt")
-        // const password = new Input("password", "pass")
-        // const button = new Input("submit", "submit")
-        // button.props.value = "Submit"
-        // form.onSubmit(e => { e.preventDefault(); getFormValues(e.target) })
-        // const test = createNestedChild(form, input, password, button)
-        const test = createNestedChild(div, h1, p, link)
-        return test
+        return todo
     }
 }
 

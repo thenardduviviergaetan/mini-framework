@@ -1,19 +1,24 @@
 // Component de bas extends de tout les component
 export default class Component {
-    constructor(type) {
+    constructor(type, props, children) {
         this.type = type;
-        this.props = {}
-        this.children = []
-    }
-    id(id) {
-        this.props.id = id;
+        // this.props = {}
+        this.props = props !== undefined ? props : {};
+        this.children = children !== undefined ? children : [];
     }
     className(...classList) {
         this.props.className = classList.join(" ")
     }
-    appendChild(child) {
+    addChild(child) {
         this.children.push(child);
     }
+
+    clearChildren(){
+        for (let child of this.children) {
+            child.remove();
+        }
+    }
+
 
     onClick(func) {
         this.props.onclick = (event) => {
@@ -36,7 +41,8 @@ export default class Component {
     onSubmit(func) {
         this.props.onsubmit = (event => {
             event.preventDefault();
-            func();
+            func(event.target);
+            event.target.children[0].value = ''
         });
     }
 }
