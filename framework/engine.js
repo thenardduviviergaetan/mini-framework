@@ -54,7 +54,6 @@ export const diff = (v1, v2) => {
 // Apply patches to the real DOM
 export const patch = (node, patches) => {
     for (const patch of patches) {
-        console.log(patch.type);
         switch (patch.type) {
             case 'REMOVE':
                 node.remove();
@@ -71,7 +70,6 @@ export const patch = (node, patches) => {
                 }
                 break;
             case 'CHILDREN':
-
                 node.textContent = '';
                 patch.value.map((child) => {
                     node.appendChild(render(child));
