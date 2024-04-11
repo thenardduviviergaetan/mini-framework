@@ -6,9 +6,9 @@ export default class List extends Component {
     }
     addElement(content) {
         if (typeof content === "string") {
-            this.appendChild(new ListElement(content))
+            this.addChild(new ListElement(content))
         } else {
-            this.appendChild(content)
+            this.addChild(content)
         }
     }
 }

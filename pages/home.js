@@ -19,7 +19,10 @@ export default class HomePage extends Page {
             name: "form",
         })
         form.onSubmit((data) => {
-            getFormValues(data)
+            let formData = getFormValues(data)
+            console.log(this.win.oldNode.children)
+            this.win.oldNode.children[2].addElement(formData.task)
+            this.win.renderPage(this.win.oldNode);
         })
 
         const input = new Input({
@@ -67,4 +70,5 @@ const getFormValues = (form) => {
     const data = new FormData(form)
     const res = Object.fromEntries(data.entries())
     console.log(res)
+    return res
 }
