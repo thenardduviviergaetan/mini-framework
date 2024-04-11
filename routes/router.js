@@ -1,7 +1,7 @@
 export default class Router {
     constructor(win) {
         this.win = win;
-        this.win.router = this;
+        // this.win.router = this;
         window.addEventListener('popstate', async (event) => {
             event.preventDefault();
         })

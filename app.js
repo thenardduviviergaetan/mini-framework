@@ -1,18 +1,16 @@
+import { vNode } from "./framework/engine.js"
 import Framework from "./framework/framework.js"
-import Router from "./routes/router.js"
-import HomePage from "./pages/home.js"
-import TestPage from "./pages/test.js"
+import Input from "./components/input.js"
+import List from "./components/list.js"
 
 const win = new Framework()
 
-const home = new HomePage(win)
-const test = new TestPage(win)
 
 
-const routes = {
-    "/": home,
-    "/test": test,
-}
-
-const router = new Router(win)
-router.init(routes)
+win.addComponent(vNode("h1", { id: "title" }, "Hello World"))
+win.addComponent(new Input({ id: "input", placeholder: "Enter your name" }))
+const list = new List({ id: "list" })
+list.addElement("Element 1")
+list.addElement("Element 2")
+list.addElement("Element 3")
+win.addComponent(list)

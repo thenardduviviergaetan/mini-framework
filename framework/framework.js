@@ -1,11 +1,11 @@
+import Router from "../routes/router.js";
 import { vNode, render, diff, patch } from "./engine.js";
 export default class Framework {
   constructor() {
-    this._components = [];
     this.routes = {};
+    this.router = new Router()
+    this._components = [];
     this.oldNode = {};
-    // this.router = new Router();
-    this.router = null;
     this._init();
   }
   _init() {
@@ -14,12 +14,19 @@ export default class Framework {
     document.body.appendChild(initNode);
   }
 
-  renderPage(component) {
-    const newNode = vNode(component.type, component.props, ...component.children || []);
+  // addRoute(path, component) {
+  //   this.routes[path] = component;
+  // }
+
+  addComponent(component) {
+    this._components.push(component);
+    this.render(component);
+  }
+
+  render() {
+    const newNode = vNode("main", { id: "container" }, ...this._components);
     const patches = diff(this.oldNode, newNode);
-    const app = document.getElementById('container');
-    patch(app, patches);
+    patch(document.body.lastChild, patches);
     this.oldNode = newNode;
   }
-  
 }
