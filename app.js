@@ -15,5 +15,13 @@ const routes = {
     "/": home,
     "/test": test
 }
+
 // console.log(win.oldNode);
 router.init(routes)
+
+// document.getElementById('link').addEventListener('click', (event) => {
+//     event.preventDefault()
+//     router.navigateTo("/test")
+// })
+
+// router.navigateTo("/test")

@@ -9,7 +9,7 @@ export default class Framework {
     this._init();
   }
   _init() {
-    this.oldNode = vNode("main", { id: "app" }, ...this._components)
+    this.oldNode = vNode("div", { id: "container" }, ...this._components)
     const initNode = render(this.oldNode);
     document.body.appendChild(initNode);
   }
@@ -17,7 +17,7 @@ export default class Framework {
   renderPage(component) {
     const newNode = vNode(component.type, component.props, ...component.children || []);
     const patches = diff(this.oldNode, newNode);
-    const app = document.getElementById('app');
+    const app = document.getElementById('container');
     patch(app, patches);
     this.oldNode = newNode;
   }

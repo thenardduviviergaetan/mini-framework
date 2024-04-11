@@ -1,5 +1,7 @@
 import { Page } from "../components/page.js";
 import { vNode, createNestedChild } from "../framework/engine.js";
+import Input from "../components/input.js";
+
 
 export default class HomePage extends Page {
     constructor(win) {
@@ -11,6 +13,21 @@ export default class HomePage extends Page {
         const div = vNode("div", { id: "container" })
         const h1 = vNode("h1", { id: "test" }, "This is a Form Title")
         const p = vNode("p", { id: "test" }, "This is a text cool, you need to be prepared to all bugs")
+
+        const link = new Input("button")
+        link.props.id = "link"
+        // link.props.href = "/test"
+        link.props.value = "Go to Test"
+        link.onClick((e) =>{
+            e.preventDefault();
+            console.log(e);
+            this.win.router.navigateTo("/test")
+        } )
+
+
+
+
+
         // const form = new Form()
         // const input = new Input("text", "txt")
         // const password = new Input("password", "pass")
@@ -18,7 +35,7 @@ export default class HomePage extends Page {
         // button.props.value = "Submit"
         // form.onSubmit(e => { e.preventDefault(); getFormValues(e.target) })
         // const test = createNestedChild(form, input, password, button)
-        const test = createNestedChild(div, h1, p)
+        const test = createNestedChild(div, h1, p, link)
         return test
     }
 }

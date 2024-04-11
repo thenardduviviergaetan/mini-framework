@@ -2,8 +2,9 @@ import { Page } from "../components/page.js";
 import { vNode, createNestedChild } from "../framework/engine.js";
 
 export default class TestPage extends Page {
-    constructor() {
+    constructor(win) {
         super()
+        this.win = win
     }
 
     generatePage() {
