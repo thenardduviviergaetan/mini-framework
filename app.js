@@ -11,7 +11,7 @@ const test = new TestPage(win)
 
 const routes = {
     "/": home,
-    "/test": test
+    "/test": test,
 }
 
 const router = new Router(win)

@@ -1,4 +1,3 @@
-import Router from "../routes/router.js";
 import { vNode, render, diff, patch } from "./engine.js";
 export default class Framework {
   constructor() {
