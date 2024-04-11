@@ -2,14 +2,10 @@ import Component from "./component.js";
 
 // Component input permettant de creer un element en fonction tu type entrer en constructor
 export default class Input extends Component{
-    constructor(inputType){
+    constructor(inputType,name){
         super("input")
         this.props.type = inputType !== undefined ? inputType : "button"
-    }
-    label(value){
-        if (this.props.type == "button"){
-            this.props.value = value
-        }
+        this.props.name = name !== undefined ? name : inputType
     }
     onClick(func){
         this.props.onclick = func;
@@ -23,4 +19,5 @@ export default class Input extends Component{
     onSubmit(func){
         this.props.onsubmit = func;
     }
+    
 }
