@@ -14,4 +14,29 @@ export default class Component {
     appendChild(child) {
         this.children.push(child);
     }
+
+    onClick(func) {
+        this.props.onclick = (event) => {
+            event.preventDefault();
+            func();
+        };
+    }
+    onChange(func) {
+        this.props.onchange = (event) => {
+            event.preventDefault();
+            func();
+        };
+    }
+    ondblClick(func) {
+        this.props.ondblclick = (event) => {
+            event.preventDefault();
+            func();
+        };
+    }
+    onSubmit(func) {
+        this.props.onsubmit = (event => {
+            event.preventDefault();
+            func();
+        });
+    }
 }

@@ -1,27 +1,18 @@
 import Framework from "./framework/framework.js"
-import { Page } from "./components/page.js"
-import { vNode, createNestedChild } from "./framework/engine.js";
+import Router from "./routes/router.js"
 import HomePage from "./pages/home.js"
-import Router from "./routes/router.js";
-import DashboardPage from "./pages/dashboard.js";
+import TestPage from "./pages/test.js"
 
 const win = new Framework()
-// const router = new Router()
-const home = new HomePage()
 
-// const dashboard = new DashboardPage()
-
-// const routes = {
-//     "/": home,
-//     "/dashboard": dashboard
-// }
+const home = new HomePage(win)
+const test = new TestPage(win)
 
 
-// for (const [key, value] of Object.entries(routes)) {
-//     router.addRoute(key, () => {
-//         win.render(key, value.render())
-//     })
-// }
-// win.render("/dashboard", dashboard.render())
+const routes = {
+    "/": home,
+    "/test": test,
+}
 
-win.render("/", home.render())
+const router = new Router(win)
+router.init(routes)
