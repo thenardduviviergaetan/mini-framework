@@ -72,11 +72,9 @@ export const patch = (node, patches) => {
                 break;
             case 'CHILDREN':
                 node.textContent = '';
-                console.log("node before",node)
                 patch.value.map((child) => {
                     node.appendChild(render(child));
                 })
-                console.log("node after",node)
                 break;
         }
     }
