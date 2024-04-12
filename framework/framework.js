@@ -2,8 +2,8 @@ import Router from "../routes/router.js";
 import { vNode, render, diff, patch } from "./engine.js";
 export default class Framework {
   constructor() {
-    this.routes = {};
-    this.router = new Router()
+    this.routes = [];
+    this.router = new Router(this)
     this._components = [];
     this.oldNode = {};
     this._init();
@@ -17,6 +17,15 @@ export default class Framework {
   // addRoute(path, component) {
   //   this.routes[path] = component;
   // }
+
+  bind({href,content}){
+    // const test = {"test":"test"}
+    const link = vNode("a",{href:href},content)
+    const route = {}
+    this.routes.push(route[href]=link)
+    link.onClick(()=>this.router.navigateTo(href))
+    this.addComponent(link)
+  }
 
   addComponent(component) {
     this._components.push(component);

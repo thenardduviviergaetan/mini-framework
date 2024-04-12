@@ -1,4 +1,4 @@
-import { createNestedChild, getFormValues, vNode } from "./framework/engine.js"
+import { diff, getFormValues, patch, vNode } from "./framework/engine.js"
 import Framework from "./framework/framework.js"
 import Input from "./components/input.js"
 import List from "./components/list.js"
@@ -16,9 +16,21 @@ const input = new Input({ id: "input", placeholder: "Add your task here", name: 
 
 const form = new Form({id:"task-manager"}).createForm(input);
 form.onSubmit((e)=>{
-    getFormValues(e)
+    const task = getFormValues(e).task;
+    list.addElement(task);
+    const patches = diff(win.oldNode, list);
+    patch(list,patches);
 })
 
+win.bind({
+    href:"/test",
+    content:"Go to test"
+})
+
+win.bind({
+    href:"/",
+    content:"Go back"
+})
 win.addComponent(form)
 win.addComponent(list)
 // list.addElement("Element 2")

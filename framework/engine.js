@@ -35,6 +35,7 @@ export const render = (vNode) => {
 // Compare new virtual node with old virtual node
 export const diff = (v1, v2) => {
     const patches = [];
+    
     if (typeof v1 === 'string' || typeof v2 === 'string') {
         if (v1 !== v2) {
             patches.push({ type: 'TEXT', value: v2 });

@@ -11,6 +11,9 @@ export default class List extends Component {
             this.addChild(content)
         }
     }
+    update(){
+
+    }
 }
 
 class ListElement extends Component {

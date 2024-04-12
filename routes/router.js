@@ -4,6 +4,7 @@ export default class Router {
         // this.win.router = this;
         window.addEventListener('popstate', async (event) => {
             event.preventDefault();
+            this.init(this.win.routes)
         })
     }
 
@@ -21,6 +22,7 @@ export default class Router {
   
     _loadRoute() {
         const pathname = window.location.pathname;
+        console.log(this.win.routes)
         const route = this.win.routes.find(r => r.path === pathname);
         if (!route) {
             return;
