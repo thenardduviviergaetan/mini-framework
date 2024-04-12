@@ -72,9 +72,11 @@ export const patch = (node, patches) => {
                 break;
             case 'CHILDREN':
                 node.textContent = '';
+                console.log("node before",node)
                 patch.value.map((child) => {
                     node.appendChild(render(child));
                 })
+                console.log("node after",node)
                 break;
         }
     }
@@ -83,6 +85,5 @@ export const patch = (node, patches) => {
 export const getFormValues = (form) => {
     const values = new FormData(form)
     const data = Object.fromEntries(values.entries())
-    console.log(data)
     return data
 }

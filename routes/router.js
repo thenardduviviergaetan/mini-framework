@@ -22,7 +22,6 @@ export default class Router {
   
     _loadRoute() {
         const pathname = window.location.pathname;
-        console.log(this.win.routes)
         const route = this.win.routes.find(r => r.path === pathname);
         if (!route) {
             return;
