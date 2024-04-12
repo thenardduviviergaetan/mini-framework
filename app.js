@@ -3,37 +3,47 @@ import Framework from "./framework/framework.js"
 import Input from "./components/input.js"
 import List from "./components/list.js"
 import Form from "./components/form.js"
+import Link from "./components/link.js"
+
 const win = new Framework()
-
-
 
 win.addComponent(vNode("h1", { id: "title" }, "TO:DO List"))
 const list = new List({ id: "list" })
 
-
 const input = new Input({ id: "input", placeholder: "Add your task here", name: "task"})
-
 
 const form = new Form({id:"task-manager"}).createForm(input);
 form.onSubmit((e)=>{
     const task = getFormValues(e).task;
-    list.addElement(task);
-    const patches = diff(win.oldNode, list);
-    patch(list,patches);
+    // list.addElement(task);
+    // const patches = diff(win.oldNode, list);
+    // patch(list,patches);
 })
 
-win.bind({
-    href:"/test",
-    content:"Go to test"
+const list_items = ["Task 1", "Task 2", "Task 3"]
+
+list_items.forEach((item) => {
+    list.addItem(item)
 })
 
-win.bind({
-    href:"/",
-    content:"Go back"
-})
+const box = vNode("div", {id: "box"})
+
+const itemsLeft = vNode("span", { id: "items-left" }, "0 items left")
+box.addElement(itemsLeft)
+
+const linkBox = vNode("div", {id: "link-box"})
+const link = new Link("Go to test")
+win.bindLink(link, "/test")
+linkBox.addElement(link)
+
+const link2 = new Link("Go back")
+win.bindLink(link2, "/")
+linkBox.addElement(link2)
+box.addElement(linkBox)
+
+const clear = new Link("Clear all")
+box.addElement(clear)
+
 win.addComponent(form)
 win.addComponent(list)
-// list.addElement("Element 2")
-// list.addElement("Element 3")
-// list.addElement("Element 4")
-// win.addComponent(test)
+win.addComponent(box)

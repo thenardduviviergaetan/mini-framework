@@ -6,6 +6,7 @@ import { diff } from "../framework/engine.js";
 export default class Form extends Component{
     constructor(props){
         super("form", props)
+        this.props.className = "form"
     }
 
     createForm(...inputs){

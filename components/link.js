@@ -1,14 +1,14 @@
+import { vNode } from "../framework/engine.js";
 import Component from "./component.js";
 
 export default class Link extends Component {
-    constructor({href,content,win}){
+    constructor(content){
         super("a")
-        this.props.href = href;
-        this.children = content;
-        this.props.onclick = (e)=>{
-            e.preventDefault();
-            win.router.navigateTo(href)
-        };
+        this.props.href = "#";
+        this.props.content = content;
+        this.props.className = "link"
+
+        return vNode("a",this.props, this.props.content)
     }
 
 }

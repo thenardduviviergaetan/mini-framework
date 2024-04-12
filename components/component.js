@@ -6,9 +6,9 @@ export default class Component {
         this.children = children !== undefined ? children : [];
     }
     className(...classList) {
-        this.props.className = classList.join(" ")
+        this.props.className += ' ' + classList.join(" ")
     }
-    addChild(child) {
+    addElement(child) {
         this.children.push(child);
     }
 
@@ -69,13 +69,13 @@ export default class Component {
 //         this.update();
 //     }
 
-//     update() {
-//         // Diff the old and new virtual nodes and patch the real DOM with the changes
-//         const oldVNode = this.vNode;
-//         this.vNode = this.render();
-//         const patches = diff(oldVNode, this.vNode);
-//         patch(this.domNode, patches);
-//     }
+    // update() {
+    //     // Diff the old and new virtual nodes and patch the real DOM with the changes
+    //     const oldVNode = this.vNode;
+    //     this.vNode = this.render();
+    //     const patches = diff(oldVNode, this.vNode);
+    //     patch(this.domNode, patches);
+    // }
 
 //     mount() {
 //         // Render the component for the first time and save the resulting virtual node and real DOM node

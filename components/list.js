@@ -3,12 +3,13 @@ import Component from "./component.js"
 export default class List extends Component {
     constructor(props) {
         super("ul", props)
+        this.props.className = "list"
     }
-    addElement(content) {
+    addItem(content) {
         if (typeof content === "string") {
-            this.addChild(new ListElement(content))
+            this.addElement(new ListElement(content))
         } else {
-            this.addChild(content)
+            this.addElement(content)
         }
     }
     update(){
@@ -19,6 +20,7 @@ export default class List extends Component {
 class ListElement extends Component {
     constructor(content) {
         super("li")
+        this.props.className = "list_element"
         this.children = content;
     }
 }

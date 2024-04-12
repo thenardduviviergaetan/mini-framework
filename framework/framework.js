@@ -18,13 +18,12 @@ export default class Framework {
   //   this.routes[path] = component;
   // }
 
-  bind({href,content}){
-    // const test = {"test":"test"}
-    const link = vNode("a",{href:href},content)
+  bindLink( component, href ) {
     const route = {}
-    this.routes.push(route[href]=link)
-    link.onClick(()=>this.router.navigateTo(href))
-    this.addComponent(link)
+    this.routes.push(route[href] = component)
+    component.onClick(() => {
+      this.router.navigateTo(href)
+    })
   }
 
   addComponent(component) {
