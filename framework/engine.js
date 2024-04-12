@@ -78,5 +78,10 @@ export const patch = (node, patches) => {
         }
     }
 };
-//automate the all engine system to create a component
 
+export const getFormValues = (form) => {
+    const values = new FormData(form)
+    const data = Object.fromEntries(values.entries())
+    console.log(data)
+    return data
+}
