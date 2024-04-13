@@ -97,4 +97,8 @@ h1 {
 }
 .list_element:last-child {
   border-bottom: none;
+}
+
+.completed {
+  text-decoration: line-through;
 }/*# sourceMappingURL=style.css.map */

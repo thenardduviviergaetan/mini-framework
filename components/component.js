@@ -22,19 +22,19 @@ export default class Component {
     onClick(func) {
         this.props.onclick = (event) => {
             event.preventDefault();
-            func();
+            func(event);
         };
     }
     onChange(func) {
         this.props.onchange = (event) => {
             event.preventDefault();
-            func();
+            func(event);
         };
     }
     ondblClick(func) {
         this.props.ondblclick = (event) => {
             event.preventDefault();
-            func();
+            func(event);
         };
     }
     onSubmit(func) {
