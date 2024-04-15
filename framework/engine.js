@@ -1,8 +1,8 @@
 import Component from "../components/component.js";
 
 // Create virtual node
-// export const vNode = (type, props, ...children) => ({ type, props, children });
-export const vNode = (type, props, ...children) => (new Component(type, props, children));
+// export const vNode = (tag, props, ...children) => ({ tag, props, children });
+export const vNode = (tag, props, ...children) => (new Component(tag, props, children));
 /**
  * Function to created nested components
  * The first element of each array will be the parent Node of the following elements in 
@@ -14,14 +14,14 @@ export const createNestedChild = (...vNodes) => {
     for (let i = 1; i < vNodes.length; i++) {
         children.push(vNodes[i])
     }
-    return vNode(vNodes[0].type, vNodes[0].props, ...children)
+    return vNode(vNodes[0].tag, vNodes[0].props, ...children)
 }
 // Render virtual node
 export const render = (vNode) => {
     if (typeof vNode === 'string') {
         return document.createTextNode(vNode);
     }
-    const node = document.createElement(vNode.type);
+    const node = document.createElement(vNode.tag);
     if (typeof vNode.props === 'object' && vNode.props !== null) {
         for (const [prop, value] of Object.entries(vNode.props)) {
             node[prop] = value;
@@ -38,16 +38,16 @@ export const diff = (v1, v2) => {
     
     if (typeof v1 === 'string' || typeof v2 === 'string') {
         if (v1 !== v2) {
-            patches.push({ type: 'TEXT', value: v2 });
+            patches.push({ tag: 'TEXT', value: v2 });
         }
-    } else if (v1.type !== v2.type) {
-        patches.push({ type: 'REPLACE', value: v2 });
-    } else if (v1.type === v2.type) {
+    } else if (v1.tag !== v2.tag) {
+        patches.push({ tag: 'REPLACE', value: v2 });
+    } else if (v1.tag === v2.tag) {
         if (JSON.stringify(v1.props) !== JSON.stringify(v2.props)) {
-            patches.push({ type: 'PROPS', value: v2.props });
+            patches.push({ tag: 'PROPS', value: v2.props });
         }
         if (JSON.stringify(v1.children) !== JSON.stringify(v2.children)) {
-            patches.push({ type: 'CHILDREN', value: v2.children });
+            patches.push({ tag: 'CHILDREN', value: v2.children });
         }
     }
     return patches;
@@ -55,7 +55,7 @@ export const diff = (v1, v2) => {
 // Apply patches to the real DOM
 export const patch = (node, patches) => {
     for (const patch of patches) {
-        switch (patch.type) {
+        switch (patch.tag) {
             case 'REMOVE':
                 node.remove();
                 break;

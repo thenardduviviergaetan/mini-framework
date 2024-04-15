@@ -1,50 +1,58 @@
-import {getFormValues, vNode } from "./framework/engine.js"
+import { createNestedChild, getFormValues } from "./framework/engine.js"
 import Framework from "./framework/framework.js"
 import Input from "./components/input.js"
 import List from "./components/list.js"
 import Form from "./components/form.js"
 import Link from "./components/link.js"
+import Component from "./components/component.js"
+import Counter from "./components/test.js"
 
+// Initialize the framework
 const win = new Framework()
 
-win.addComponent(vNode("h1", { id: "title" }, "TO:DO List"))
-const list = new List({ id: "list" })
 
-const input = new Input({ id: "input", placeholder: "Add your task here", name: "task"})
-
+// Create the Header Component
+const header = new Component("header", { id: "header" })
+const title = new Component("h1", { id: "title" }, ["TO:DO List"])
+const input = new Input({ id: "input", placeholder: "Add your task here", name: "task" })
 const form = new Form({ id: "task-manager" }).createForm(input);
-
-form.onSubmit((e) => {
+form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
     list.update(task)
-})
+} )
+header.addElement(title, createNestedChild(form, input))
+win.addComponent(header)
 
+// Create the Main Component
+const main = new Component("main", { id: "main" })
+const list = new List({ id: "list" })
+main.addElement(list)
+win.addComponent(main)
 
-// const list_items = ["Task 1", "Task 2", "Task 3"]
-
-// list_items.forEach((item) => {
-//     list.addItem(item)
-// })
-
-const box = vNode("div", {id: "box"})
-
-const itemsLeft = vNode("span", { id: "items-left" }, "0 items left")
-box.addElement(itemsLeft)
-
-const linkBox = vNode("div", {id: "link-box"})
-const link = new Link("Go to test")
-win.bindLink(link, "/test")
-linkBox.addElement(link)
-
-const link2 = new Link("Go back")
-win.bindLink(link2, "/")
-linkBox.addElement(link2)
-box.addElement(linkBox)
-
+const listFooter = new Component("div", { id: "list-footer" })
+// const itemsLeft = new Component("span", { id: "items-left" }, `0 items left !`)
+const counter = new Counter("div", { id: "counter" }, [` ${list.children.length} items left !`]);
+const linkBox = new Component("div", { id: "link-box", className: "link-box" })
+const link = new Link("All")
+const link2 = new Link("Active")
+const link3 = new Link("Completed")
 const clear = new Link("Clear all")
-box.addElement(clear)
+win.bindLink(link, "/")
+win.bindLink(link2, "/active")
+win.bindLink(link3, "/completed")
+linkBox.addElement(link, link2, link3)
+listFooter.addElement(counter, linkBox, clear)
+main.addElement(listFooter)
+
+// Create the Footer Component
+const footer = new Component("footer", { id: "footer" })
+const p1 = new Component("p", {}, "Double-click to edit a todo")
+const p2 = new Component("p", {}, "Created by Dream Team")
+const p3 = new Component("p", {}, "Part of mini-framework project")
+footer.addElement(p1, p2, p3)
+win.addComponent(footer)
 
 
-win.addComponent(form)
-win.addComponent(list)
-win.addComponent(box)
+// Render the Page
+win.render()
+

@@ -1,7 +1,8 @@
 export default class Router {
     constructor(win) {
         this.win = win;
-        // this.win.router = this;
+        this.win.router = this;
+        this.routes = {};
         window.addEventListener('popstate', async (event) => {
             event.preventDefault();
             this.init(this.win.routes)
@@ -9,24 +10,18 @@ export default class Router {
     }
 
     init(routes) {
-        this.win.routes = Object.keys(routes).map(route => {
-            return {
-                path: route,
-                callback: (params) => {
-                    this.win.renderPage(routes[route].generatePage())
-                }
-            }
-        })
-        this._loadRoute()
+        this.routes = routes;
+        this._loadRoute();
     }
-  
+
     _loadRoute() {
-        const pathname = window.location.pathname;
-        const route = this.win.routes.find(r => r.path === pathname);
-        if (!route) {
-            return;
+        const path = window.location.pathname;
+        const route = this.routes[path];
+        if (route) {
+            route();
+        } else {
+            console.log("404")
         }
-        route.callback();
     }
 
     navigateTo(path) {

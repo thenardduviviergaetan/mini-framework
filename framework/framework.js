@@ -9,19 +9,19 @@ export default class Framework {
     this._init();
   }
   _init() {
-    this.oldNode = vNode("main", { id: "container" }, ...this._components)
+    this.oldNode = vNode("section", { id: "root" }, ...this._components)
     const initNode = render(this.oldNode);
     document.body.appendChild(initNode);
   }
 
-  // addRoute(path, component) {
-  //   this.routes[path] = component;
-  // }
+  addRoute(routes) {
+    this.router.init(routes)
+  }
 
   bindLink( component, href ) {
     const route = {}
     this.routes.push(route[href] = component)
-    component.onClick(() => {
+    component.actionListener('click', () => {
       this.router.navigateTo(href)
     })
   }
@@ -32,7 +32,7 @@ export default class Framework {
   }
 
   render() {
-    const newNode = vNode("main", { id: "container" }, ...this._components);
+    const newNode = vNode("section", { id: "root" }, ...this._components);
     const patches = diff(this.oldNode, newNode);
     patch(document.body.lastChild, patches);
     this.oldNode = newNode;
