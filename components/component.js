@@ -22,23 +22,23 @@ export default class Component {
         return {};
     }
 
-    render() {
+    async render() {
         // Override this method in subclasses to define what the component renders
         return '';
     }
 
-    setState(newState) {
+    async setState(newState) {
         this.state = { ...this.state, ...newState };
         // Re-render the component whenever state changes
-        this.update();
+        await this.update();
     }
 
-    update(data) {
+    async update(data) {
         // Diff the old and new virtual nodes and patch the real DOM with the changes
         const oldVNode = this.vNode;
-        this.vNode = this.render();
+        this.vNode = await this.render();
         const patches = diff(oldVNode, this.vNode);
-        patch(this.domNode, patches);
+        await patch(this.domNode, patches);
     }
 
     // mount() {

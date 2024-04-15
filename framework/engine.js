@@ -53,7 +53,7 @@ export const diff = (v1, v2) => {
     return patches;
 };
 // Apply patches to the real DOM
-export const patch = (node, patches) => {
+export const patch = async (node, patches) => {
     for (const patch of patches) {
         switch (patch.tag) {
             case 'REMOVE':

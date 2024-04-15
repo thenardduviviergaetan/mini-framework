@@ -22,24 +22,20 @@ export default class Counter extends Component {
         return [div]
     }
 
-    increment() {
+   async increment() {
         this.setState({ count: this.state.count + 1 })
-        const patches = diff(this.domNode, this);
-        const rootNode = document.getElementById('root');
-        patch(rootNode, patches);
+       await this.updateCount(this.state.count)
     }
 
-    decrement() {
+   async decrement() {
         this.setState({ count: this.state.count - 1 })
-        const patches = diff(this.domNode, this);
-        const rootNode = document.getElementById('root');
-        patch(rootNode, patches);
+       await this.updateCount(this.state.count)
     }
 
-    updateCount(count) {
+   async updateCount(count) {
         this.setState({ count: count })
         const patches = diff(this.domNode, this);
         const rootNode = document.getElementById('counter');
-        patch(rootNode, patches);
+       await patch(rootNode, patches);
     }
 }

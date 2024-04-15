@@ -5,7 +5,7 @@ import List from "./components/list.js"
 import Form from "./components/form.js"
 import Link from "./components/link.js"
 import Component from "./components/component.js"
-import Counter from "./components/test.js"
+import Counter from "./components/counter.js"
 
 // Initialize the framework
 const win = new Framework()
@@ -31,7 +31,7 @@ win.addComponent(main)
 
 const listFooter = new Component("div", { id: "list-footer" })
 // const itemsLeft = new Component("span", { id: "items-left" }, `0 items left !`)
-const counter = new Counter("div", { id: "counter" }, [` ${list.children.length} items left !`]);
+const counter = new Counter({ id: "counter" }, 0)
 const linkBox = new Component("div", { id: "link-box", className: "link-box" })
 const link = new Link("All")
 const link2 = new Link("Active")

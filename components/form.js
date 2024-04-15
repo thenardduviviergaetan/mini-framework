@@ -1,7 +1,6 @@
 import { createNestedChild, patch, render } from "../framework/engine.js";
 import Component from "./component.js";
 import Input from "./input.js";
-import { diff } from "../framework/engine.js";
 
 export default class Form extends Component{
     constructor(props){

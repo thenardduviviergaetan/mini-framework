@@ -26,15 +26,15 @@ export default class Framework {
     })
   }
 
-  addComponent(component) {
+  async addComponent(component) {
     this._components.push(component);
-    this.render(component);
+    await this.render(component);
   }
 
-  render() {
+  async render() {
     const newNode = vNode("section", { id: "root" }, ...this._components);
     const patches = diff(this.oldNode, newNode);
-    patch(document.body.lastChild, patches);
+    await patch(document.body.lastChild, patches);
     this.oldNode = newNode;
   }
 }
