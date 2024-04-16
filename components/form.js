@@ -1,4 +1,5 @@
-import { createNestedChild, patch, render } from "../framework/engine.js";
+import {patch, render } from "../framework/engine.js";
+import { createNestedChild } from "../framework/hooks.js";
 import Component from "./component.js";
 import Input from "./input.js";
 

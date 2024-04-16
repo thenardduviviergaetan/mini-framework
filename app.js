@@ -1,4 +1,4 @@
-import { createNestedChild, getFormValues } from "./framework/engine.js"
+import {getFormValues } from "./framework/engine.js"
 import Framework from "./framework/framework.js"
 import Input from "./components/input.js"
 import List from "./components/list.js"
@@ -6,6 +6,7 @@ import Form from "./components/form.js"
 import Link from "./components/link.js"
 import Component from "./components/component.js"
 import Counter from "./components/counter.js"
+import { createNestedChild } from "./framework/hooks.js"
 
 // Initialize the framework
 const win = new Framework()

@@ -3,19 +3,7 @@ import Component from "../components/component.js";
 // Create virtual node
 // export const vNode = (tag, props, ...children) => ({ tag, props, children });
 export const vNode = (tag, props, ...children) => (new Component(tag, props, children));
-/**
- * Function to created nested components
- * The first element of each array will be the parent Node of the following elements in 
- * each array. 
- * @param {Array<VirtualNode>} vNodes - list of DOM virtual Nodes
-*/
-export const createNestedChild = (...vNodes) => {
-    let children = [];
-    for (let i = 1; i < vNodes.length; i++) {
-        children.push(vNodes[i])
-    }
-    return vNode(vNodes[0].tag, vNodes[0].props, ...children)
-}
+
 // Render virtual node
 export const render = (vNode) => {
     if (typeof vNode === 'string') {
@@ -86,9 +74,3 @@ export const getFormValues = (form) => {
     return data
 }
 
-export const useState = (defaultValue) => {
-    let value = defaultValue;
-    const getValue = () => value
-    const setValue = newValue => value = newValue
-    return [getValue, setValue];
-}
