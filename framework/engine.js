@@ -24,7 +24,11 @@ export const render = (vNode) => {
     const node = document.createElement(vNode.tag);
     if (typeof vNode.props === 'object' && vNode.props !== null) {
         for (const [prop, value] of Object.entries(vNode.props)) {
-            node[prop] = value;
+            if (node[prop] !== undefined) {
+                node[prop] = value;
+            } else {
+                node.setAttribute(prop, value); 
+            }
         }
     }
     for (const child of vNode.children || []) {

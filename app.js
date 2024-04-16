@@ -11,7 +11,7 @@ const win = new Framework()
 
 
 // Create the Header Component
-const header = new Component("header", { id: "header"})
+const header = new Component("header", { id: "header","data-testid":"header"})
 const title = new Component("h1", { id: "title" }, ["TO:DO List"])
 const input = new Input({ id: "input", placeholder: "Add your task here", name: "task", type: "text" })
 const checkAll = new Input({ id: "checkAll", type: "button",value:"Check all"})
@@ -24,7 +24,7 @@ header.addElement(title, form)
 win.addComponent(header)
 
 // Create the Main Component
-const main = new Component("main", { id: "main" })
+const main = new Component("main", { id: "main","data-testid":"main"})
 const list = new List({ id: "list" })
 checkAll.actionListener('click', ()=>{
     list.checkAll()
