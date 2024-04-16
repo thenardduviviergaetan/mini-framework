@@ -20,7 +20,7 @@ const checkAll = new Input({ id: "checkAll", type: "button" })
 const form = new Form({ id: "task-manager" }, checkAll, input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
-    list.update(task)
+    list.update(task, counter)
 })
 header.addElement(title, form)
 win.addComponent(header)
@@ -32,8 +32,7 @@ main.addElement(list)
 win.addComponent(main)
 
 const listFooter = new Component("div", { id: "list-footer" })
-// const itemsLeft = new Component("span", { id: "items-left" }, `0 items left !`)
-const counter = new Counter({ id: "counter" }, 0)
+const counter = new Counter({ id: "counter" })
 const linkBox = new Component("div", { id: "link-box", className: "link-box" })
 const link = new Link("All")
 const link2 = new Link("Active")

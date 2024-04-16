@@ -1,25 +1,52 @@
 import Component from "./component.js"
-// import Counter from "./counter.js"
+import Counter from "./counter.js"
 import { render, diff, patch } from "../framework/engine.js"
 import { useState } from "../framework/hooks.js"
+
 // Component list permettant de creer un element List
 export default class List extends Component {
     constructor(props) {
         super("ul", props)
         this.props.className = "list"
         this.domNode = render(this)
-        // this.counter = new Counter({ id: "counter" }, this.children.length)
     }
 
-    async update(task) {
+    async updateDOM(callback) {
         this.oldNode = this.domNode;
-        const element = new ListElement(task, this);
-        this.children.push(element);
+        callback();
         const patches = diff(this.oldNode, this);
-        const rootNode = document.getElementById('list');
+        const rootNode = document.getElementById(this.props.id);
         await patch(rootNode, patches);
         this.domNode = render(this);
-        // this.counter.updateCount(this.children.length)
+        this.counter.updateCount(this.children.length);
+    }
+
+    async update(task, counter) {
+        this.counter = counter;
+        this.updateDOM(() => {
+            const element = new ListElement(task, this);
+            this.children.push(element);
+        });
+    }
+
+    async refresh() {
+        this.updateDOM(() => { });
+    }
+
+
+    all(){
+
+    }
+
+    completed(){
+    }
+
+    active(){
+
+    }
+
+    clearCompleted(){
+
     }
 }
 
@@ -28,19 +55,9 @@ class ListElement extends Component {
         super("li")
         this.props.className = "list_element"
         this.children = this.render(content, parent);
-        // this.state = this.initState();
         this.domNode = render(this)
         this.parent = parent;
     }
-
-    // initState() {
-    //     return { checked: false}
-    // }
-
-    // async setState(newState) {
-    //     this.state = { ...this.state, ...newState };
-    //   
-    // }
 
     render(content) {
         const [state,setState] = useState(false)
@@ -54,7 +71,7 @@ class ListElement extends Component {
                 state() ? arr.push('completed') : arr.pop()
                 input.props.checked = state();
                 this.props.className = arr.join(' ');
-                this.updateParent();
+                this.parent.refresh();
         })
         const button = new Component("button", { className: "destroy" }, ["X"])
         button.actionListener('click', async (e) => { await this.destroy() })
@@ -66,14 +83,11 @@ class ListElement extends Component {
         this.domNode.remove();
         const index = this.parent.children.indexOf(this);
         if (index > -1) {
-            this.parent.children.splice(index, 1);
-            await this.updateParent();
+                this.parent.children = [
+                    ...this.parent.children.slice(0, index),
+                    ...this.parent.children.slice(index + 1)
+                ];
+            await this.parent.refresh();
         }
-    }
-
-    async updateParent() {
-        const patches = diff(this.parent.domNode, this.parent);
-        const rootNode = document.getElementById('list');
-        await patch(rootNode, patches);
     }
 }
