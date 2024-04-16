@@ -1,16 +1,13 @@
 import Component from "./component.js"
-import { getFormValues } from "../framework/engine.js"
+import Counter from "./counter.js"
 import { render, diff, patch } from "../framework/engine.js"
 import { useState } from "../framework/hooks.js"
-import Input from "./input.js"
-import Form from "./form.js"
 
 // Component list permettant de creer un element List
 export default class List extends Component {
     constructor(props) {
         super("ul", props)
         this.props.className = "list"
-        this.memoryChildren = [];
         this.domNode = render(this)
     }
 
@@ -21,17 +18,14 @@ export default class List extends Component {
         const rootNode = document.getElementById(this.props.id);
         await patch(rootNode, patches);
         this.domNode = render(this);
-        this.counter.updateCount(this.memoryChildren.filter((element) => {
-            return !element.state()
-        }).length);
+        this.counter.updateCount(this.children.length);
     }
 
     async update(task, counter) {
-        this.counter = counter;
+        this.counter = counter
         this.updateDOM(() => {
             const element = new ListElement(task, this);
             this.children.push(element);
-            this.memoryChildren.push(element);
         });
     }
 
@@ -39,34 +33,36 @@ export default class List extends Component {
         this.updateDOM(() => { });
     }
 
-    async filter(filtersState) {
-        this.updateDOM(() => {
-            this.oldNode = this.domNode;
-            this.children = [];
-            if (filtersState !== "all") {
-                this.memoryChildren.forEach((element) => {
-                    if (element.state() === filtersState) {
-                        this.children.push(element)
-                    }
-                })
-            } else {
-                this.children = [...this.memoryChildren]
-            }
-        })
-    }
+    checkAll() {
+        const [checkState, setCheck] = useState(false)
+        
+        if (this.children.some(element => !element.props.className.includes("completed"))) {
+            this.children.forEach((element) => {
+                if (!element.props.className.includes("completed")) {
+                    setCheck(!element.state)
+                    element.state = checkState()
+                    const arr = element.props.className.split(' ');
+                    arr.push("completed")
+                    element.props.className = arr.join(' ');
 
-    async clearCompleted() {
-        this.updateDOM(() => {
-            this.oldNode = this.domNode;
-            this.children = [...this.memoryChildren]
-            this.memoryChildren.forEach((element) => {
-                if (element.state() === true) {
-                    element.destroy();
+                    element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = true }))
+                    element.parent.refresh()
                 }
             })
+            return
+        }
+        this.children.forEach(element => {
+            setCheck(!element.state);
+            const arr = element.props.className.split(' ');
+            element.state = checkState();
+            checkState() ? element.state ? arr.push("completed"):arr.pop() : !element.state ? arr.pop() : arr.push("completed");
+
+            
+            element.props.className = arr.join(' ');
+            element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = element.state }))
+            element.parent.refresh()
         })
     }
-
 
     all() {
 
@@ -78,53 +74,62 @@ export default class List extends Component {
     active() {
 
     }
+
+    clearCompleted() {
+
+    }
 }
 
 class ListElement extends Component {
     constructor(content, parent) {
         super("li")
         this.props.className = "list_element"
-        this.content = content;
         this.children = this.render(content, parent);
         this.domNode = render(this)
         this.parent = parent;
-        [this.state, this.setState] = useState(false)
-        this.init()
     }
-    init() {
-        this.actionListener("dblclick", () => {
-            console.log("test")
-            const input = new Input({ type: "text", name: "liUpdate", value: this.content })
-            const form = new Form({ id: "update" }, input)
-            form.actionListener("submit", (e) => {
-                console.log(e.target)
-                const liUpdate = getFormValues(e).liUpdate;
-                this.content = liUpdate;
-                this.children = this.render(liUpdate, this.parent);
-                this.parent.refresh();
-            })
-            this.children = [form]
-            this.parent.refresh();
-        })
-    }
+
     render(content) {
+        const [state, setState] = useState(this.state)
+
         const div = new Component("div", { className: "view" })
         const input = new Component("input", { className: "toggle", type: "checkbox" })
-        const label = new Component("label", {}, [content])
+        const label = new Component("label", { checked: false }, [content])
         input.actionListener('click', async (e) => {
-            this.setState(!this.state());
+            setState(!this.state);
+            this.state = state();
             const arr = this.props.className.split(' ');
-            this.state() ? arr.push('completed') : arr.pop()
-            input.props.checked = this.state();
+            if (state()) {
+                //want to check one
+                if (this.state) {
+                    // if not already checked
+                    arr.push("completed")
+                } else {
+                    // if already checked
+                    arr.pop()
+                }
+            } else {
+                //want to un-check one
+                if (this.state) {
+                    // if not-already checked
+                    arr.push("completed")
+
+                } else {
+                    // if already checked
+                    arr.pop()
+                }
+            }
             this.props.className = arr.join(' ');
+            input.props.checked = !input.props.checked;
             this.parent.refresh();
         })
-        input.props.checked = typeof this.state === "function" ? this.state() : false;
         const button = new Component("button", { className: "destroy" }, ["X"])
         button.actionListener('click', async (e) => { await this.destroy() })
         div.addElement(input, label, button)
         return [div]
     }
+
+
 
     async destroy() {
         this.domNode.remove();
@@ -134,10 +139,6 @@ class ListElement extends Component {
                 ...this.parent.children.slice(0, index),
                 ...this.parent.children.slice(index + 1)
             ];
-            this.parent.memoryChildren = [
-                ...this.parent.memoryChildren.slice(0, index),
-                ...this.parent.memoryChildren.slice(index + 1)
-            ]
             await this.parent.refresh();
         }
     }

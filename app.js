@@ -6,7 +6,7 @@ import Form from "./components/form.js"
 import Link from "./components/link.js"
 import Component from "./components/component.js"
 import Counter from "./components/counter.js"
-import { createNestedChild } from "./framework/hooks.js"
+import { createNestedChild, useState } from "./framework/hooks.js"
 
 // Initialize the framework
 const win = new Framework()
@@ -16,7 +16,7 @@ const win = new Framework()
 const header = new Component("header", { id: "header" })
 const title = new Component("h1", { id: "title" }, ["TO:DO List"])
 const input = new Input({ id: "input", placeholder: "Add your task here", name: "task", type: "text" })
-const checkAll = new Input({ id: "checkAll", type: "button" })
+const checkAll = new Input({ id: "checkAll", type: "button",value:"Check all"})
 const form = new Form({ id: "task-manager" }, checkAll, input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
@@ -28,6 +28,9 @@ win.addComponent(header)
 // Create the Main Component
 const main = new Component("main", { id: "main" })
 const list = new List({ id: "list" })
+checkAll.actionListener('click', ()=>{
+    list.checkAll()
+})
 main.addElement(list)
 win.addComponent(main)
 
@@ -37,10 +40,7 @@ const linkBox = new Component("div", { id: "link-box", className: "link-box" })
 const link = new Link("All")
 const link2 = new Link("Active")
 const link3 = new Link("Completed")
-const clear = new Input({id: "clear-completed", type: "button", value: "Clear Completed"})
-clear.actionListener('click', () => {
-    list.clearCompleted()
-})
+const clear = new Link("Clear all")
 win.bindLink(link, "/")
 win.bindLink(link2, "/active")
 win.bindLink(link3, "/completed")
