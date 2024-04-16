@@ -1,4 +1,4 @@
-import { getFormValues } from "./framework/engine.js"
+import { render, getFormValues } from "./framework/engine.js"
 import Framework from "./framework/framework.js"
 import Input from "./components/input.js"
 import List from "./components/list.js"
@@ -11,10 +11,10 @@ const win = new Framework()
 
 
 // Create the Header Component
-const header = new Component("header", { id: "header"})
+const header = new Component("header", { id: "header" })
 const title = new Component("h1", { id: "title" }, ["TO:DO List"])
 const input = new Input({ id: "input", placeholder: "Add your task here", name: "task", type: "text" })
-const checkAll = new Input({ id: "checkAll", type: "button",value:"Check all"})
+const checkAll = new Input({ id: "checkAll", type: "button", value: "Check all" })
 const form = new Form({ id: "task-manager" }, checkAll, input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
@@ -26,14 +26,15 @@ win.addComponent(header)
 // Create the Main Component
 const main = new Component("main", { id: "main" })
 const list = new List({ id: "list" })
-checkAll.actionListener('click', ()=>{
+checkAll.actionListener('click', () => {
     list.checkAll()
 })
 main.addElement(list)
 win.addComponent(main)
+// list.routeBinder = (routes) => { win.setRoutes(routes) }
 
+//Creating List Footer
 const listFooter = new Component("div", { id: "list-footer" })
-// const counter = new Counter({ id: "counter" })
 const linkBox = new Component("div", { id: "link-box", className: "link-box" })
 const link = new Link("All")
 const link2 = new Link("Active")
@@ -42,13 +43,17 @@ const clear = new Input({ id: "clear-completed", type: "button", value: "Clear C
 clear.actionListener('click', () => {
     list.clearCompleted()
 })
-win.bindLink(link, "/")
-win.bindLink(link2, "/#/active")
-win.bindLink(link3, "/#/completed")
+
+win.setRoutes([
+    ["/", () => { list.all() }, link],
+    ["/#/active", () => { list.filterChild(false)}, link2],
+    ["/#/completed", () => [ list.filterChild(true)], link3]
+])
+
 linkBox.addElement(link, link2, link3)
-// listFooter.addElement(counter, linkBox, clear)
 listFooter.addElement(list.counter, linkBox, clear)
-main.addElement(listFooter)
+
+list.addFooter(render(listFooter))
 
 // Create the Footer Component
 const footer = new Component("footer", { id: "footer" })
@@ -57,11 +62,7 @@ const p2 = new Component("p", {}, "Created by Dream Team")
 const p3 = new Component("p", {}, "Part of mini-framework project")
 footer.addElement(p1, p2, p3)
 win.addComponent(footer)
-win.setRoutes([
-    ["/", () => { list.all() }],
-    ["/#/active", () => { list.filterChild(false)}],
-    ["/#/completed", () => [ list.filterChild(true)]]
-])
+
 
 // Render the Page
 win.render()
