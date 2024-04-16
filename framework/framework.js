@@ -40,7 +40,7 @@ export default class Framework {
    * @private
    */
   _init() {
-    this.oldNode = vNode("section", { id: "root" }, ...this._components);
+    this.oldNode = vNode("section", { id: "root", className:"todoapp"}, ...this._components);
     const initNode = render(this.oldNode);
     document.body.appendChild(initNode);
   }

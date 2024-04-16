@@ -11,7 +11,7 @@ const win = new Framework()
 
 
 // Create the Header Component
-const header = new Component("header", { id: "header" })
+const header = new Component("header", { id: "header"})
 const title = new Component("h1", { id: "title" }, ["TO:DO List"])
 const input = new Input({ id: "input", placeholder: "Add your task here", name: "task", type: "text" })
 const checkAll = new Input({ id: "checkAll", type: "button",value:"Check all"})
@@ -57,7 +57,6 @@ const p2 = new Component("p", {}, "Created by Dream Team")
 const p3 = new Component("p", {}, "Part of mini-framework project")
 footer.addElement(p1, p2, p3)
 win.addComponent(footer)
-
 win.setRoutes([
     ["/", () => { list.all() }],
     ["/#/active", () => { list.filterChild(false)}],
