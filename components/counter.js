@@ -14,7 +14,7 @@ export default class Counter extends Component {
      */
     constructor(props) {
         super("span", props);
-        this.children = "0 item left!";
+        this.children = ["0 item left!"];
         this.props.className = "counter";
         this.domNode = render(this);
     }
@@ -25,7 +25,7 @@ export default class Counter extends Component {
      */
     updateCount(count) {
         this.oldNode = this.domNode;
-        this.children = count > 1 ? `${count} items left!` : `${count} item left!`;
+        this.children = count > 1 ? [`${count} items left!`] : [`${count} item left!`];
         const patches = diff(this.oldNode, this);
         const rootNode = document.getElementById(this.props.id);
         patch(rootNode, patches);

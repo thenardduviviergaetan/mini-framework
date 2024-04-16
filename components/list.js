@@ -5,7 +5,6 @@ import Input from "./input.js"
 import Form from "./form.js"
 import Counter from "./counter.js"
 
-// Component list permettant de creer un element List
 /**
  * Represents a List component.
  * @class
@@ -22,7 +21,7 @@ export default class List extends Component {
         this.props.className = "list";
         this.memoryChildren = [];
         this.domNode = render(this);
-        this.counter = new Counter({id: "counter"});
+        this.counter = new Counter({id: "counter", className: "todo-count" });
     }
 
     /**
@@ -70,7 +69,7 @@ export default class List extends Component {
      */
     checkAll() {
         const [checkState, setCheck] = useState(false);
-        
+
         if (this.children.some(element => !element.props.className.includes("completed"))) {
             this.children.forEach((element) => {
                 if (!element.props.className.includes("completed")) {
@@ -91,10 +90,10 @@ export default class List extends Component {
             const arr = element.props.className.split(' ');
             element.setChecked(checkState());
             checkState() ? element.checked() ? arr.push("completed") : arr.pop() : !element.checked() ? arr.pop() : arr.push("completed");
-
-            
             element.props.className = arr.join(' ');
-            element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = element.state; }));
+            element.children.forEach(child => child.children.forEach(input => {
+                if (input.props.type = "checkbox") input.props.checked = element.state;
+            }));
             element.parent.refresh();
         });
     }
@@ -140,7 +139,6 @@ export default class List extends Component {
      * Filters the List elements to show all elements.
      */
     all() {
-        console.log("ALL =", this);
         this.filterChild('all');
     }
 
@@ -148,7 +146,6 @@ export default class List extends Component {
      * Filters the List elements to show completed elements.
      */
     completed() {
-        console.log("Completed =", this);
         this.filterChild(true);
     }
 
@@ -156,7 +153,6 @@ export default class List extends Component {
      * Filters the List elements to show active elements.
      */
     active() {
-        console.log("Active =", this);
         this.filterChild(false);
     }
 }
@@ -179,7 +175,6 @@ class ListElement extends Component {
     }
     init() {
         this.actionListener("dblclick", () => {
-            console.log("test")
             const input = new Input({ type: "text", name: "liUpdate", value: this.content })
             const form = new Form({ id: "update" }, input)
             form.actionListener("submit", (e) => {
@@ -194,32 +189,22 @@ class ListElement extends Component {
     }
 
     render(content) {
-        // const [state, setState] = useState(this.state)
-        console.log(content)
         const div = new Component("div", { className: "view" })
-        const input = new Component("input", { className: "toggle", type: "checkbox" })
-        const label = new Component("label", { checked: false }, [content])
+        const input = new Component("input", { className: "toggle", type: "checkbox", "data-testid": "todo-item-toggle" })
+        const label = new Component("label", { checked: false, "data-testid": "todo-item-label" }, [content])
         input.actionListener('click', async (e) => {
             this.setChecked(!this.checked());
-            // this.state = state();
             const arr = this.props.className.split(' ');
             if (this.checked()) {
-                //want to check one
                 if (this.checked()) {
-                    // if not already checked
                     arr.push("completed")
                 } else {
-                    // if already checked
                     arr.pop()
                 }
             } else {
-                //want to un-check one
                 if (this.checked()) {
-                    // if not-already checked
                     arr.push("completed")
-
                 } else {
-                    // if already checked
                     arr.pop()
                 }
             }
