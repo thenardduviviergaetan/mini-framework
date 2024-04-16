@@ -75,10 +75,23 @@ form {
 .input[type=text]:focus {
   border-color: var(--secondary-color);
 }
-.input[type=button] {
+
+#checkAll {
+  background-color: var(--background-color);
+  text-align: right;
+  padding: 10px;
+  border: solid 1px var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
   width: -moz-fit-content;
   width: fit-content;
-  padding: 10px;
+  transition: color 0.3s ease-in-out;
+}
+#checkAll:hover {
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .list {

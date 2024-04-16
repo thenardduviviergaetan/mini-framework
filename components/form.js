@@ -1,7 +1,4 @@
-import {patch, render } from "../framework/engine.js";
-import { createNestedChild } from "../framework/hooks.js";
 import Component from "./component.js";
-import Input from "./input.js";
 
 export default class Form extends Component{
     constructor(props,...inputs){
@@ -12,7 +9,7 @@ export default class Form extends Component{
 
     init(...inputs){
         // const submit = new Input({ id: "submit", type: "submit", value: "Submit"})
-        const form = createNestedChild(this,...inputs)
+        const form = this.addElement(...inputs)
         return form
     }
 

@@ -1,5 +1,4 @@
 import Component from "./component.js"
-import Counter from "./counter.js"
 import { render, diff, patch, getFormValues } from "../framework/engine.js"
 import { useState } from "../framework/hooks.js"
 import Input from "./input.js"
