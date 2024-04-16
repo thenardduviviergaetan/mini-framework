@@ -37,7 +37,7 @@ export default class List extends Component {
         const patches = diff(this.oldNode, this);
         const rootNode = document.getElementById(this.props.id);
 
-        if (!this.footer.displayed) {
+        if (!this.footer.displayed && this.memoryChildren.length > 0) {
             rootNode.after(this.footer.node)
             this.footer.displayed = true
         }else if (this.memoryChildren.length === 0) {
@@ -71,7 +71,6 @@ export default class List extends Component {
 
     addFooter(footer) {
         this.footer.node = footer
-        console.log(footer);
     }
 
     /**

@@ -69,7 +69,6 @@ export default class Router {
     _matchUrlToRoute(urlSegs) {
         for (const [path, route] of Object.entries(this.routes)) {
             const routePathSegs = route.path.split('/').slice(1);
-            console.log("match ",routePathSegs, urlSegs);
             if (routePathSegs.length !== urlSegs.length) {
                 continue;
             }

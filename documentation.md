@@ -66,32 +66,20 @@ In this example, we're creating an `h1` element with an `id` of `title`.
 
 The routing system in our framework allows you to manage different views in your single-page application. To implement this, you need to use the setRoutes function of the application instance. This function should be called just before rendering the application.
 
-The `setRoutes` function takes an array of arrays as arguments. Each sub-array represents a route and consists of two elements: the path string and a callback function. The path string defines the URL path for the route, and the callback function is executed when the route is accessed.
+The `setRoutes` function takes an array of arrays as arguments. Each sub-array represents a route and consists of two elements: the path string and a callback function. The path string defines the URL path for the route, the callback function is executed when the route is accessed, and the component to binding link.
 
 
 ```js
 app.setRoutes([
-    ["/", homeCallback],
-    ["/foo", fooCallback],
-    ["/baz", bazCallback]
+    ["/", homeCallback, myLink1],
+    ["/foo", fooCallback, myLink2],
+    ["/baz", bazCallback, myLink3]
 ])
 
 // Render the application
 app.render()
 ```
 In the above example, three routes are defined: "/", "/foo", and "/baz". When the user navigates to these paths, the corresponding callback functions (`homeCallback`, `fooCallback`, `bazCallback`) are executed.
-
-### Bindings Links
-
-To create a navigable `link` to a route, you need to create a Link Component and bind it to a route using the `bindLink()` method of the application instance.
-
-The `Link` Component takes the name of the link as a parameter. The `bindLink()` method takes two parameters: the `Link` Component and the path string of the route.
-
-```js
-const link = new Link("foo")
-
-app.bindLink(link, "/foo")
-```
 
 In the above example, a `Link` Component named "foo" is created and bound to the "/foo" route. When this link is clicked, the application will navigate to the "/foo" route.
 
