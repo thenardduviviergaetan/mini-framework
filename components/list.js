@@ -4,6 +4,7 @@ import { useState } from "../framework/hooks.js"
 import Input from "./input.js"
 import Form from "./form.js"
 import Counter from "./counter.js"
+import Link from "./link.js"
 
 /**
  * Represents a List component.
@@ -21,7 +22,8 @@ export default class List extends Component {
         this.props.className = "list";
         this.memoryChildren = [];
         this.domNode = render(this);
-        this.counter = new Counter({id: "counter", className: "todo-count" });
+        this.counter = new Counter({ id: "counter", className: "todo-count"  });
+        this.footer = { displayed: false, node: null }
     }
 
     /**
@@ -34,11 +36,22 @@ export default class List extends Component {
         callback();
         const patches = diff(this.oldNode, this);
         const rootNode = document.getElementById(this.props.id);
+
+        if (!this.footer.displayed) {
+            rootNode.after(this.footer.node)
+            this.footer.displayed = true
+        }else if (this.memoryChildren.length === 0) {
+            this.footer.node.remove()
+            this.footer.displayed = false
+        }
+
         await patch(rootNode, patches);
         this.domNode = render(this);
-        this.counter.updateCount(this.memoryChildren.filter((element) => {
-            return !element.checked();
-        }).length);
+        if (this.footer.displayed) {
+            this.counter.updateCount(this.memoryChildren.filter((element) => {
+                return !element.checked();
+            }).length);
+        }
     }
 
     /**
@@ -56,6 +69,11 @@ export default class List extends Component {
         });
     }
 
+    addFooter(footer) {
+        this.footer.node = footer
+        console.log(footer);
+    }
+
     /**
      * Refreshes the List component by updating the DOM without any changes.
      * @async
@@ -69,6 +87,7 @@ export default class List extends Component {
      */
     checkAll() {
         const [checkState, setCheck] = useState(false);
+
 
         if (this.children.some(element => !element.props.className.includes("completed"))) {
             this.children.forEach((element) => {
@@ -90,6 +109,8 @@ export default class List extends Component {
             const arr = element.props.className.split(' ');
             element.setChecked(checkState());
             checkState() ? element.checked() ? arr.push("completed") : arr.pop() : !element.checked() ? arr.pop() : arr.push("completed");
+
+
             element.props.className = arr.join(' ');
             element.children.forEach(child => child.children.forEach(input => {
                 if (input.props.type = "checkbox") input.props.checked = element.state;
@@ -104,6 +125,8 @@ export default class List extends Component {
      * @param {string} filtersState - The state of the filters to be applied.
      */
     async filterChild(filtersState) {
+        if (this.memoryChildren.length === 0) return
+
         this.updateDOM(() => {
             this.oldNode = this.domNode;
             this.children = [];

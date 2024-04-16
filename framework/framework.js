@@ -52,7 +52,7 @@ export default class Framework {
   setRoutes(routes) {
     this.router.init(routes);
   }
-
+  
   /**
    * Binds a link to a component.
    * @param {Object} component - The component to bind.

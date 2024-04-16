@@ -23,27 +23,19 @@ export default class Router {
      */
     init(routes) {
         const defaultCallback = (params) => {
-            this.win.renderPage(routes[rPath].generatePage())
+            this.win.renderPage(this.routes[rPath].generatePage())
         }
 
-        for (const [rPath, rCallback] of routes) {
+        for (const [rPath, rCallback, component] of routes) {
             this.routes[rPath] = {
                 path: rPath,
                 callback: rCallback || defaultCallback,
             }
+
+            this.bindLink(component, rPath)
         }
 
         this._loadInitialRoute()
-    }
-
-    /**
-     * Adds additional routes to the router.
-     * @param {Object} routes - The routes to be added.
-     */
-    addRoutes(routes) {
-        for (const [rPath, rCallback, rParams] of routes) {
-            this.routes[rPath] = { path: rPath, callback: rCallback, params: rParams || {} }
-        }
     }
 
     /**
@@ -77,6 +69,7 @@ export default class Router {
     _matchUrlToRoute(urlSegs) {
         for (const [path, route] of Object.entries(this.routes)) {
             const routePathSegs = route.path.split('/').slice(1);
+            console.log("match ",routePathSegs, urlSegs);
             if (routePathSegs.length !== urlSegs.length) {
                 continue;
             }
@@ -94,6 +87,17 @@ export default class Router {
         }
 
         this.navigateTo('/')
+    }
+
+    /**
+     * Binds a link to a component.
+     * @param {Object} component - The component to bind.
+     * @param {string} href - The href of the link.
+     */
+    bindLink(component, href) {
+        component.actionListener("click", () => {
+            this.navigateTo(href);
+        })
     }
 
     /**
@@ -122,6 +126,7 @@ export default class Router {
      * @param {string} path - The path to navigate to.
      */
     navigateTo(path) {
+        console.log("Path", path);
         history.pushState({}, '', path);
         const pathSegs = this._getPathSegments(path);
         this.loadRoute(pathSegs);
