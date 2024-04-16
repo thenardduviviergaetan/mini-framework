@@ -1,4 +1,4 @@
-import {getFormValues } from "./framework/engine.js"
+import { getFormValues } from "./framework/engine.js"
 import Framework from "./framework/framework.js"
 import Input from "./components/input.js"
 import List from "./components/list.js"
@@ -15,13 +15,14 @@ const win = new Framework()
 // Create the Header Component
 const header = new Component("header", { id: "header" })
 const title = new Component("h1", { id: "title" }, ["TO:DO List"])
-const input = new Input({ id: "input", placeholder: "Add your task here", name: "task" })
-const form = new Form({ id: "task-manager" },input)
+const input = new Input({ id: "input", placeholder: "Add your task here", name: "task", type: "text" })
+const checkAll = new Input({ id: "checkAll", type: "button" })
+const form = new Form({ id: "task-manager" }, checkAll, input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
     list.update(task)
-} )
-header.addElement(title, createNestedChild(form, input))
+})
+header.addElement(title, form)
 win.addComponent(header)
 
 // Create the Main Component

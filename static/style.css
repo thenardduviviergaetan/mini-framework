@@ -59,8 +59,14 @@ footer {
   color: #666;
 }
 
-.input {
-  width: 100%;
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.input[type=text] {
+  width: 87%;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 4px;
@@ -69,8 +75,11 @@ footer {
   transition: border-color 0.3s ease-in-out;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
-.input:focus {
+.input[type=text]:focus {
   border-color: #666;
+}
+.input[type=button] {
+  width: 10%;
 }
 
 .list {

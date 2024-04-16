@@ -60,20 +60,31 @@ footer {
         color: #666;
     }
 }
-
+form {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .input {
-    width: 100%;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 4px;
-    outline: none;
-    font-size: 1rem;
-    transition: border-color 0.3s ease-in-out;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    &[type=text] {
+        width: 87%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 4px;
+        outline: none;
+        font-size: 1rem;
+        transition: border-color 0.3s ease-in-out;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 
-    &:focus {
-        border-color: #666;
+        &:focus {
+            border-color: #666;
+        }
     }
+    &[type=button]{
+        width: 10%;
+        
+    }
+
 }
 
 .list {
@@ -107,12 +118,12 @@ footer {
     align-items: center;
     width: 100%;
     padding: 10px;
-        
+
     &:hover .destroy {
         display: block;
     }
 
-    label{
+    label {
         width: 60%;
         font-size: 1.3rem;
         color: #333;
