@@ -6,15 +6,30 @@ import Form from "./form.js"
 import Counter from "./counter.js"
 
 // Component list permettant de creer un element List
+/**
+ * Represents a List component.
+ * @class
+ * @extends Component
+ */
 export default class List extends Component {
+    /**
+     * Creates an instance of List.
+     * @constructor
+     * @param {Object} props - The properties for the List component.
+     */
     constructor(props) {
-        super("ul", props)
-        this.props.className = "list"
+        super("ul", props);
+        this.props.className = "list";
         this.memoryChildren = [];
-        this.domNode = render(this)
-        this.counter = new Counter({id: "counter"})
+        this.domNode = render(this);
+        this.counter = new Counter({id: "counter"});
     }
 
+    /**
+     * Updates the DOM with the changes made to the List component.
+     * @async
+     * @param {Function} callback - The callback function to be executed before updating the DOM.
+     */
     async updateDOM(callback) {
         this.oldNode = this.domNode;
         callback();
@@ -23,10 +38,16 @@ export default class List extends Component {
         await patch(rootNode, patches);
         this.domNode = render(this);
         this.counter.updateCount(this.memoryChildren.filter((element) => {
-            return !element.checked()
+            return !element.checked();
         }).length);
     }
 
+    /**
+     * Updates the List component with a new task and counter.
+     * @async
+     * @param {Object} task - The new task to be added to the List component.
+     * @param {Object} counter - The new counter to be used in the List component.
+     */
     async update(task, counter) {
         this.counter = counter;
         this.updateDOM(() => {
@@ -36,74 +57,53 @@ export default class List extends Component {
         });
     }
 
+    /**
+     * Refreshes the List component by updating the DOM without any changes.
+     * @async
+     */
     async refresh() {
         this.updateDOM(() => { });
     }
 
+    /**
+     * Checks all the List elements.
+     */
     checkAll() {
-        const [checkState, setCheck] = useState(false)
+        const [checkState, setCheck] = useState(false);
         
         if (this.children.some(element => !element.props.className.includes("completed"))) {
             this.children.forEach((element) => {
                 if (!element.props.className.includes("completed")) {
-                    setCheck(!element.checked())
-                    element.setChecked(checkState())
+                    setCheck(!element.checked());
+                    element.setChecked(checkState());
                     const arr = element.props.className.split(' ');
-                    arr.push("completed")
+                    arr.push("completed");
                     element.props.className = arr.join(' ');
 
-                    element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = true }))
-                    element.parent.refresh()
+                    element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = true; }));
+                    element.parent.refresh();
                 }
-            })
-            return
+            });
+            return;
         }
         this.children.forEach(element => {
             setCheck(!element.checked());
             const arr = element.props.className.split(' ');
             element.setChecked(checkState());
-            // element.state = checkState();
-            checkState() ? element.checked() ? arr.push("completed"):arr.pop() : !element.checked() ? arr.pop() : arr.push("completed");
+            checkState() ? element.checked() ? arr.push("completed") : arr.pop() : !element.checked() ? arr.pop() : arr.push("completed");
 
             
             element.props.className = arr.join(' ');
-            element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = element.state }))
-            element.parent.refresh()
-        })
+            element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = element.state; }));
+            element.parent.refresh();
+        });
     }
 
-    checkAll() {
-        const [checkState, setCheck] = useState(false)
-        
-        if (this.children.some(element => !element.props.className.includes("completed"))) {
-            this.children.forEach((element) => {
-                if (!element.props.className.includes("completed")) {
-                    setCheck(!element.checked())
-                    element.setChecked(checkState())
-                    const arr = element.props.className.split(' ');
-                    arr.push("completed")
-                    element.props.className = arr.join(' ');
-
-                    element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = true }))
-                    element.parent.refresh()
-                }
-            })
-            return
-        }
-        this.children.forEach(element => {
-            setCheck(!element.checked());
-            const arr = element.props.className.split(' ');
-            element.setChecked(checkState());
-            // element.state = checkState();
-            checkState() ? element.checked() ? arr.push("completed"):arr.pop() : !element.checked() ? arr.pop() : arr.push("completed");
-
-            
-            element.props.className = arr.join(' ');
-            element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = element.state }))
-            element.parent.refresh()
-        })
-    }
-
+    /**
+     * Filters the List elements based on the given filters state.
+     * @async
+     * @param {string} filtersState - The state of the filters to be applied.
+     */
     async filterChild(filtersState) {
         this.updateDOM(() => {
             this.oldNode = this.domNode;
@@ -111,43 +111,61 @@ export default class List extends Component {
             if (filtersState !== "all") {
                 this.memoryChildren.forEach((element) => {
                     if (element.checked() === filtersState) {
-                        this.children.push(element)
+                        this.children.push(element);
                     }
-                })
+                });
             } else {
-                this.children = [...this.memoryChildren]
+                this.children = [...this.memoryChildren];
             }
-        })
+        });
     }
 
+    /**
+     * Clears all the completed List elements.
+     * @async
+     */
     async clearCompleted() {
         this.updateDOM(() => {
             this.oldNode = this.domNode;
-            this.children = [...this.memoryChildren]
+            this.children = [...this.memoryChildren];
             this.memoryChildren.forEach((element) => {
                 if (element.checked() === true) {
                     element.destroy();
                 }
-            })
-        })
+            });
+        });
     }
 
+    /**
+     * Filters the List elements to show all elements.
+     */
     all() {
         console.log("ALL =", this);
-        this.filterChild('all')
+        this.filterChild('all');
     }
 
+    /**
+     * Filters the List elements to show completed elements.
+     */
     completed() {
         console.log("Completed =", this);
-        this.filterChild(true)
+        this.filterChild(true);
     }
 
+    /**
+     * Filters the List elements to show active elements.
+     */
     active() {
         console.log("Active =", this);
-        this.filterChild(false)
+        this.filterChild(false);
     }
 }
 
+/**
+ * Represents a list element component.
+ * @class
+ * @extends Component
+ */
 class ListElement extends Component {
     constructor(content, parent) {
         super("li")

@@ -1,10 +1,22 @@
 import Component from "../components/component.js";
 
 // Create virtual node
-// export const vNode = (tag, props, ...children) => ({ tag, props, children });
+/**
+ * Creates a virtual node (vNode) with the given tag, props, and children.
+ *
+ * @param {string} tag - The HTML tag name of the vNode.
+ * @param {object} props - The properties of the vNode.
+ * @param {...any} children - The child elements of the vNode.
+ * @returns {Component} - The created vNode.
+ */
 export const vNode = (tag, props, ...children) => (new Component(tag, props, children));
 
 // Render virtual node
+/**
+ * Renders a virtual DOM node into a real DOM node.
+ * @param {Object|string} vNode - The virtual DOM node to render.
+ * @returns {Node} - The rendered DOM node.
+ */
 export const render = (vNode) => {
     if (typeof vNode === 'string') {
         return document.createTextNode(vNode);
@@ -21,6 +33,12 @@ export const render = (vNode) => {
     return node;
 };
 // Compare new virtual node with old virtual node
+/**
+ * Calculates the difference between two virtual DOM nodes.
+ * @param {Object} v1 - The first virtual DOM node.
+ * @param {Object} v2 - The second virtual DOM node.
+ * @returns {Array} - An array of patches representing the differences between the two virtual DOM nodes.
+ */
 export const diff = (v1, v2) => {
     const patches = [];
     
@@ -41,6 +59,12 @@ export const diff = (v1, v2) => {
     return patches;
 };
 // Apply patches to the real DOM
+/**
+ * Applies a set of patches to a DOM node.
+ * @param {Node} node - The DOM node to apply the patches to.
+ * @param {Array} patches - An array of patches to apply.
+ * @returns {Promise<void>} - A promise that resolves when all patches have been applied.
+ */
 export const patch = async (node, patches) => {
     for (const patch of patches) {
         switch (patch.tag) {
@@ -68,6 +92,11 @@ export const patch = async (node, patches) => {
     }
 };
 
+/**
+ * Retrieves the values of a form and returns them as an object.
+ * @param {HTMLFormElement} form - The form element to retrieve values from.
+ * @returns {Object} - An object containing the form values.
+ */
 export const getFormValues = (form) => {
     const values = new FormData(form)
     const data = Object.fromEntries(values.entries())
