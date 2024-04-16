@@ -85,3 +85,10 @@ export const getFormValues = (form) => {
     const data = Object.fromEntries(values.entries())
     return data
 }
+
+export const useState = (defaultValue) => {
+    let value = defaultValue;
+    const getValue = () => value
+    const setValue = newValue => value = newValue
+    return [getValue, setValue];
+}

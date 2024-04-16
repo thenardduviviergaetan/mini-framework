@@ -133,6 +133,11 @@ footer {
   display: none;
 }
 
+.completed label {
+  text-decoration: line-through;
+  color: #333;
+}
+
 #list-footer {
   display: flex;
   justify-content: space-between;

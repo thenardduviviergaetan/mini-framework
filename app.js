@@ -15,7 +15,7 @@ const win = new Framework()
 const header = new Component("header", { id: "header" })
 const title = new Component("h1", { id: "title" }, ["TO:DO List"])
 const input = new Input({ id: "input", placeholder: "Add your task here", name: "task" })
-const form = new Form({ id: "task-manager" }).createForm(input);
+const form = new Form({ id: "task-manager" },input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
     list.update(task)

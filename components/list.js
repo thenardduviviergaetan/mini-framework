@@ -1,6 +1,6 @@
 import Component from "./component.js"
 // import Counter from "./counter.js"
-import { render, diff, patch } from "../framework/engine.js"
+import { render, diff, patch, useState } from "../framework/engine.js"
 // Component list permettant de creer un element List
 export default class List extends Component {
     constructor(props) {
@@ -14,7 +14,6 @@ export default class List extends Component {
         this.oldNode = this.domNode;
         const element = new ListElement(task, this);
         this.children.push(element);
-        this.children = [...this.children];
         const patches = diff(this.oldNode, this);
         const rootNode = document.getElementById('list');
         await patch(rootNode, patches);
@@ -28,15 +27,34 @@ class ListElement extends Component {
         super("li")
         this.props.className = "list_element"
         this.children = this.render(content, parent);
-        this.state = this.initState();
+        // this.state = this.initState();
         this.domNode = render(this)
         this.parent = parent;
     }
 
+    // initState() {
+    //     return { checked: false}
+    // }
+
+    // async setState(newState) {
+    //     this.state = { ...this.state, ...newState };
+    //   
+    // }
+
     render(content) {
+        const [state,setState] = useState(false)
+
         const div = new Component("div", { className: "view" })
-        const input = new Component("input", { className: "toggle", type: "checkbox" })
+        const input = new Component("input", { className: "toggle", type: "checkbox"})
         const label = new Component("label", {}, [content])
+        input.actionListener('click', async (e) => {
+            setState(!state());
+            const arr = this.props.className.split(' ');
+                state() ? arr.push('completed') : arr.pop()
+                input.props.checked = state();
+                this.props.className = arr.join(' ');
+                this.updateParent();
+        })
         const button = new Component("button", { className: "destroy" }, ["X"])
         button.actionListener('click', async (e) => { await this.destroy() })
         div.addElement(input, label, button)
