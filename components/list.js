@@ -119,6 +119,7 @@ class ListElement extends Component {
             this.props.className = arr.join(' ');
             this.parent.refresh();
         })
+        input.props.checked = typeof this.state === "function" ? this.state() : false;
         const button = new Component("button", { className: "destroy" }, ["X"])
         button.actionListener('click', async (e) => { await this.destroy() })
         div.addElement(input, label, button)
