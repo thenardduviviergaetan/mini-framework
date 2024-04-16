@@ -1,7 +1,9 @@
 import Component from "./component.js"
-import Counter from "./counter.js"
+import { getFormValues } from "../framework/engine.js"
 import { render, diff, patch } from "../framework/engine.js"
 import { useState } from "../framework/hooks.js"
+import Input from "./input.js"
+import Form from "./form.js"
 
 // Component list permettant de creer un element List
 export default class List extends Component {
@@ -82,12 +84,29 @@ class ListElement extends Component {
     constructor(content, parent) {
         super("li")
         this.props.className = "list_element"
+        this.content = content;
         this.children = this.render(content, parent);
         this.domNode = render(this)
         this.parent = parent;
         [this.state, this.setState] = useState(false)
+        this.init()
     }
-
+    init() {
+        this.actionListener("dblclick", () => {
+            console.log("test")
+            const input = new Input({ type: "text", name: "liUpdate", value: this.content })
+            const form = new Form({ id: "update" }, input)
+            form.actionListener("submit", (e) => {
+                console.log(e.target)
+                const liUpdate = getFormValues(e).liUpdate;
+                this.content = liUpdate;
+                this.children = this.render(liUpdate, this.parent);
+                this.parent.refresh();
+            })
+            this.children = [form]
+            this.parent.refresh();
+        })
+    }
     render(content) {
         const div = new Component("div", { className: "view" })
         const input = new Component("input", { className: "toggle", type: "checkbox" })
