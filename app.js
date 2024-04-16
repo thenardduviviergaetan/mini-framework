@@ -20,7 +20,7 @@ const checkAll = new Input({ id: "checkAll", type: "button" })
 const form = new Form({ id: "task-manager" }, checkAll, input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
-    list.update(task, counter)
+    list.update(task, counter, listFooter)
 })
 header.addElement(title, form)
 win.addComponent(header)
@@ -37,7 +37,7 @@ const linkBox = new Component("div", { id: "link-box", className: "link-box" })
 const link = new Link("All")
 const link2 = new Link("Active")
 const link3 = new Link("Completed")
-const clear = new Input({id: "clear-completed", type: "button", value: "Clear Completed"})
+const clear = new Input({ id: "clear-completed", type: "button", value: "Clear Completed" })
 clear.actionListener('click', () => {
     list.clearCompleted()
 })

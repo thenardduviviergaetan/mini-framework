@@ -26,7 +26,7 @@ export default class List extends Component {
         }).length);
     }
 
-    async update(task, counter) {
+    async update(task, counter, listFooter) {
         this.counter = counter;
         this.updateDOM(() => {
             const element = new ListElement(task, this);

@@ -1,3 +1,4 @@
+import List from "../components/list.js";
 import Router from "../routes/router.js";
 import { vNode, render, diff, patch } from "./engine.js";
 export default class Framework {

@@ -4,25 +4,33 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary-color: #b83f45;
+    --secondary-color: #333;
+    --background-color: #f9f9f9;
+    --border-color: #ccc;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--secondary-color);
 }
 
 #root {
     width: 60%;
     margin: auto;
+    min-width: 400px;
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 1200px;
 }
 
 header {
     width: 100%;
-    color: #b83f45;
+    color: var(--primary-color);
     font-size: 2rem;
     padding: 10px 0;
     text-align: center;
@@ -43,32 +51,20 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #666;
+    color: var(--secondary-color);
     font-size: 0.6rem;
 }
 
-
-.link {
-    text-decoration: none;
-    color: #333;
-    transition: color 0.3s ease-in-out;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 4px;
-
-    &:hover {
-        color: #666;
-    }
-}
 form {
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .input {
     &[type=text] {
         width: 87%;
-        border: 1px solid #ccc;
+        border: 1px solid var(--border-color);
         padding: 10px;
         border-radius: 4px;
         outline: none;
@@ -77,14 +73,13 @@ form {
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 
         &:focus {
-            border-color: #666;
+            border-color: var(--secondary-color);
         }
     }
-    &[type=button]{
-        width: 10%;
-        
-    }
 
+    &[type=button] {
+        width: 10%;
+    }
 }
 
 .list {
@@ -104,13 +99,11 @@ form {
     display: flex;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--border-color);
 
     &:last-child {
         border-bottom: none;
     }
-
-
 }
 
 .view {
@@ -126,7 +119,7 @@ form {
     label {
         width: 60%;
         font-size: 1.3rem;
-        color: #333;
+        color: var(--secondary-color);
         overflow-wrap: break-word;
     }
 }
@@ -134,14 +127,14 @@ form {
 .toggle {
     width: 20%;
     height: 20px;
-    background-color: #ccc;
+    background-color: var(--border-color);
     border-radius: 10px;
     cursor: pointer;
 }
 
 .destroy {
     width: 20%;
-    color: #b83f45;
+    color: var(--primary-color);
     background-color: #fff;
     font-size: 1rem;
     font-weight: 800;
@@ -152,24 +145,61 @@ form {
 }
 
 .completed {
-
     label {
         text-decoration: line-through;
-        color: #333;
+        color: var(--secondary-color);
     }
 }
 
 #list-footer {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 20px;
+    padding: 10px;
+
+    .link-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 40%;
+    }
+
+    #clear-completed {
+        background-color: var(--background-color);
+        text-align: right;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 30%;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    #counter {
+        width: 20%;
+        text-align: left;
+    }
 }
 
-.link-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 40%;
+.link {
+    color: #333;
+    padding: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+        color: var(--secondary-color);
+    }
+
+    &:focus {
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        border-radius: 4px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
 }
