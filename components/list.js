@@ -3,6 +3,7 @@ import { render, diff, patch, getFormValues } from "../framework/engine.js"
 import { useState } from "../framework/hooks.js"
 import Input from "./input.js"
 import Form from "./form.js"
+import Counter from "./counter.js"
 
 // Component list permettant de creer un element List
 export default class List extends Component {
@@ -11,6 +12,7 @@ export default class List extends Component {
         this.props.className = "list"
         this.memoryChildren = [];
         this.domNode = render(this)
+        this.counter = new Counter({id: "counter"})
     }
 
     async updateDOM(callback) {
@@ -70,13 +72,45 @@ export default class List extends Component {
         })
     }
 
-    async filter(filtersState) {
+    checkAll() {
+        const [checkState, setCheck] = useState(false)
+        
+        if (this.children.some(element => !element.props.className.includes("completed"))) {
+            this.children.forEach((element) => {
+                if (!element.props.className.includes("completed")) {
+                    setCheck(!element.checked())
+                    element.setChecked(checkState())
+                    const arr = element.props.className.split(' ');
+                    arr.push("completed")
+                    element.props.className = arr.join(' ');
+
+                    element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = true }))
+                    element.parent.refresh()
+                }
+            })
+            return
+        }
+        this.children.forEach(element => {
+            setCheck(!element.checked());
+            const arr = element.props.className.split(' ');
+            element.setChecked(checkState());
+            // element.state = checkState();
+            checkState() ? element.checked() ? arr.push("completed"):arr.pop() : !element.checked() ? arr.pop() : arr.push("completed");
+
+            
+            element.props.className = arr.join(' ');
+            element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = element.state }))
+            element.parent.refresh()
+        })
+    }
+
+    async filterChild(filtersState) {
         this.updateDOM(() => {
             this.oldNode = this.domNode;
             this.children = [];
             if (filtersState !== "all") {
                 this.memoryChildren.forEach((element) => {
-                    if (element.state() === filtersState) {
+                    if (element.checked() === filtersState) {
                         this.children.push(element)
                     }
                 })
@@ -96,6 +130,21 @@ export default class List extends Component {
                 }
             })
         })
+    }
+
+    all() {
+        console.log("ALL =", this);
+        this.filterChild('all')
+    }
+
+    completed() {
+        console.log("Completed =", this);
+        this.filterChild(true)
+    }
+
+    active() {
+        console.log("Active =", this);
+        this.filterChild(false)
     }
 }
 

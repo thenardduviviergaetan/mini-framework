@@ -5,7 +5,6 @@ import List from "./components/list.js"
 import Form from "./components/form.js"
 import Link from "./components/link.js"
 import Component from "./components/component.js"
-import Counter from "./components/counter.js"
 
 // Initialize the framework
 const win = new Framework()
@@ -19,7 +18,7 @@ const checkAll = new Input({ id: "checkAll", type: "button",value:"Check all"})
 const form = new Form({ id: "task-manager" }, checkAll, input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
-    list.update(task, counter, listFooter)
+    list.update(task, list.counter)
 })
 header.addElement(title, form)
 win.addComponent(header)
@@ -34,7 +33,7 @@ main.addElement(list)
 win.addComponent(main)
 
 const listFooter = new Component("div", { id: "list-footer" })
-const counter = new Counter({ id: "counter" })
+// const counter = new Counter({ id: "counter" })
 const linkBox = new Component("div", { id: "link-box", className: "link-box" })
 const link = new Link("All")
 const link2 = new Link("Active")
@@ -44,10 +43,11 @@ clear.actionListener('click', () => {
     list.clearCompleted()
 })
 win.bindLink(link, "/")
-win.bindLink(link2, "/active")
-win.bindLink(link3, "/completed")
+win.bindLink(link2, "/#/active")
+win.bindLink(link3, "/#/completed")
 linkBox.addElement(link, link2, link3)
-listFooter.addElement(counter, linkBox, clear)
+// listFooter.addElement(counter, linkBox, clear)
+listFooter.addElement(list.counter, linkBox, clear)
 main.addElement(listFooter)
 
 // Create the Footer Component
@@ -58,7 +58,11 @@ const p3 = new Component("p", {}, "Part of mini-framework project")
 footer.addElement(p1, p2, p3)
 win.addComponent(footer)
 
+win.setRoutes([
+    ["/", () => { list.all() }],
+    ["/#/active", () => { list.filterChild(false)}],
+    ["/#/completed", () => [ list.filterChild(true)]]
+])
 
 // Render the Page
 win.render()
-

@@ -15,9 +15,16 @@ export default class Framework {
     document.body.appendChild(initNode);
   }
 
-  addRoute(routes) {
+  setRoutes(routes) {
+    // this.router.addRoutes(routes)
     this.router.init(routes)
+
   }
+
+  //REFACTOR May delete just check if not breaking code.
+  // addRoute(routes) {
+  //   this.router.init(routes)
+  // }
 
   bindLink( component, href ) {
     const route = {}

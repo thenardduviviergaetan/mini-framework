@@ -1,31 +1,83 @@
 export default class Router {
     constructor(win) {
         this.win = win;
-        this.win.router = this;
         this.routes = {};
         window.addEventListener('popstate', async (event) => {
             event.preventDefault();
-            this.init(this.win.routes)
+            this._loadInitialRoute();
         })
     }
 
     init(routes) {
-        this.routes = routes;
-        this._loadRoute();
+        const defaultCallback = (params) => {
+            this.win.renderPage(routes[rPath].generatePage())
+        }
+
+        for (const [rPath, rCallback] of routes) {
+            this.routes[rPath] = {
+                path: rPath,
+                callback: rCallback || defaultCallback,
+            }
+        }
+
+        this._loadInitialRoute()
     }
 
-    _loadRoute() {
-        const path = window.location.pathname;
-        const route = this.routes[path];
-        if (route) {
-            route();
-        } else {
-            console.log("404")
+    addRoutes(routes) {
+        for (const [rPath, rCallback, rParams] of routes) {
+            this.routes[rPath] = { path: rPath, callback: rCallback, params: rParams || {} }
         }
     }
 
+    _getCurrentURL() {
+        const url = window.location.href.split('/').slice(3).join('/')
+
+        return `/${url}` || '/'
+    }
+
+    _getPathSegments(path) {
+        const pathNameSplit = path.split('/');
+        return pathNameSplit.length > 1 ? pathNameSplit.slice(1) : [''];
+    }
+
+    _matchUrlToRoute(urlSegs) {
+        for (const [path, route] of Object.entries(this.routes)) {
+            const routePathSegs = route.path.split('/').slice(1);
+            if (routePathSegs.length !== urlSegs.length) {
+                continue;
+            }
+            const params = {};
+            const match = routePathSegs.every((routePathSeg, i) => {
+                if (routePathSeg.startsWith(':')) {
+                    params[routePathSeg.slice(1)] = urlSegs[i];
+                    return true;
+                }
+                return routePathSeg === urlSegs[i];
+            });
+            if (match) {
+                return { ...route, params };
+            }
+        }
+
+        this.navigateTo('/')
+    }
+
+    _loadInitialRoute() {
+        const pathSegs = this._getPathSegments(this._getCurrentURL());
+        this.loadRoute(pathSegs);
+    }
+
+    loadRoute(urlSegs) {
+        const matchedRoute = this._matchUrlToRoute(urlSegs);
+        if (!matchedRoute) {
+            throw new Error(`Route not found ${urlSegs}`);
+        }
+        matchedRoute.callback(matchedRoute.params);
+    }
+
     navigateTo(path) {
-        window.history.pushState({}, '', path);
-        this._loadRoute();
+        history.pushState({}, '', path);
+        const pathSegs = this._getPathSegments(path);
+        this.loadRoute(pathSegs);
     }
 }
