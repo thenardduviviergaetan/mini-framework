@@ -59,11 +59,12 @@ form {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding: 20px;
 }
 
 .input {
     &[type=text] {
-        width: 87%;
+        width: 80%;
         border: 1px solid var(--border-color);
         padding: 10px;
         border-radius: 4px;
@@ -76,9 +77,9 @@ form {
             border-color: var(--secondary-color);
         }
     }
-
-    &[type=button] {
-        width: 10%;
+    &[type=button]{
+        width: fit-content;
+        padding: 10px;
     }
 }
 

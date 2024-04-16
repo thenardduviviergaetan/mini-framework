@@ -6,7 +6,7 @@ import Form from "./components/form.js"
 import Link from "./components/link.js"
 import Component from "./components/component.js"
 import Counter from "./components/counter.js"
-import { createNestedChild } from "./framework/hooks.js"
+import { createNestedChild, useState } from "./framework/hooks.js"
 
 // Initialize the framework
 const win = new Framework()
@@ -16,7 +16,7 @@ const win = new Framework()
 const header = new Component("header", { id: "header" })
 const title = new Component("h1", { id: "title" }, ["TO:DO List"])
 const input = new Input({ id: "input", placeholder: "Add your task here", name: "task", type: "text" })
-const checkAll = new Input({ id: "checkAll", type: "button" })
+const checkAll = new Input({ id: "checkAll", type: "button",value:"Check all"})
 const form = new Form({ id: "task-manager" }, checkAll, input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
@@ -28,6 +28,9 @@ win.addComponent(header)
 // Create the Main Component
 const main = new Component("main", { id: "main" })
 const list = new List({ id: "list" })
+checkAll.actionListener('click', ()=>{
+    list.checkAll()
+})
 main.addElement(list)
 win.addComponent(main)
 

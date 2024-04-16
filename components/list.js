@@ -1,6 +1,6 @@
 import Component from "./component.js"
-import { getFormValues } from "../framework/engine.js"
-import { render, diff, patch } from "../framework/engine.js"
+import Counter from "./counter.js"
+import { render, diff, patch, getFormValues } from "../framework/engine.js"
 import { useState } from "../framework/hooks.js"
 import Input from "./input.js"
 import Form from "./form.js"
@@ -22,11 +22,11 @@ export default class List extends Component {
         await patch(rootNode, patches);
         this.domNode = render(this);
         this.counter.updateCount(this.memoryChildren.filter((element) => {
-            return !element.state()
+            return !element.checked()
         }).length);
     }
 
-    async update(task, counter, listFooter) {
+    async update(task, counter) {
         this.counter = counter;
         this.updateDOM(() => {
             const element = new ListElement(task, this);
@@ -37,6 +37,38 @@ export default class List extends Component {
 
     async refresh() {
         this.updateDOM(() => { });
+    }
+
+    checkAll() {
+        const [checkState, setCheck] = useState(false)
+        
+        if (this.children.some(element => !element.props.className.includes("completed"))) {
+            this.children.forEach((element) => {
+                if (!element.props.className.includes("completed")) {
+                    setCheck(!element.checked())
+                    element.setChecked(checkState())
+                    const arr = element.props.className.split(' ');
+                    arr.push("completed")
+                    element.props.className = arr.join(' ');
+
+                    element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = true }))
+                    element.parent.refresh()
+                }
+            })
+            return
+        }
+        this.children.forEach(element => {
+            setCheck(!element.checked());
+            const arr = element.props.className.split(' ');
+            element.setChecked(checkState());
+            // element.state = checkState();
+            checkState() ? element.checked() ? arr.push("completed"):arr.pop() : !element.checked() ? arr.pop() : arr.push("completed");
+
+            
+            element.props.className = arr.join(' ');
+            element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = element.state }))
+            element.parent.refresh()
+        })
     }
 
     async filter(filtersState) {
@@ -60,23 +92,11 @@ export default class List extends Component {
             this.oldNode = this.domNode;
             this.children = [...this.memoryChildren]
             this.memoryChildren.forEach((element) => {
-                if (element.state() === true) {
+                if (element.checked() === true) {
                     element.destroy();
                 }
             })
         })
-    }
-
-
-    all() {
-
-    }
-
-    completed() {
-    }
-
-    active() {
-
     }
 }
 
@@ -88,7 +108,7 @@ class ListElement extends Component {
         this.children = this.render(content, parent);
         this.domNode = render(this)
         this.parent = parent;
-        [this.state, this.setState] = useState(false)
+        [this.checked, this.setChecked] = useState(false)
         this.init()
     }
     init() {
@@ -97,34 +117,58 @@ class ListElement extends Component {
             const input = new Input({ type: "text", name: "liUpdate", value: this.content })
             const form = new Form({ id: "update" }, input)
             form.actionListener("submit", (e) => {
-                console.log(e.target)
                 const liUpdate = getFormValues(e).liUpdate;
                 this.content = liUpdate;
-                this.children = this.render(liUpdate, this.parent);
+                this.children = this.render(liUpdate);
                 this.parent.refresh();
             })
             this.children = [form]
             this.parent.refresh();
         })
     }
+
     render(content) {
+        // const [state, setState] = useState(this.state)
+        console.log(content)
         const div = new Component("div", { className: "view" })
         const input = new Component("input", { className: "toggle", type: "checkbox" })
-        const label = new Component("label", {}, [content])
+        const label = new Component("label", { checked: false }, [content])
         input.actionListener('click', async (e) => {
-            this.setState(!this.state());
+            this.setChecked(!this.checked());
+            // this.state = state();
             const arr = this.props.className.split(' ');
-            this.state() ? arr.push('completed') : arr.pop()
-            input.props.checked = this.state();
+            if (this.checked()) {
+                //want to check one
+                if (this.checked()) {
+                    // if not already checked
+                    arr.push("completed")
+                } else {
+                    // if already checked
+                    arr.pop()
+                }
+            } else {
+                //want to un-check one
+                if (this.checked()) {
+                    // if not-already checked
+                    arr.push("completed")
+
+                } else {
+                    // if already checked
+                    arr.pop()
+                }
+            }
             this.props.className = arr.join(' ');
+            input.props.checked = !input.props.checked;
             this.parent.refresh();
         })
-        input.props.checked = typeof this.state === "function" ? this.state() : false;
+        input.props.checked = typeof this.checked === "function" ? this.checked() : false;
         const button = new Component("button", { className: "destroy" }, ["X"])
         button.actionListener('click', async (e) => { await this.destroy() })
         div.addElement(input, label, button)
         return [div]
     }
+
+
 
     async destroy() {
         this.domNode.remove();

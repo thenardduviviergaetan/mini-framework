@@ -5,7 +5,7 @@ export default class Component {
         this.tag = tag;
         this.props = props;
         this.children = children;
-        this.state = this.initState();
+        // this.state = false;
         this.domNode = render(this);
     }
 
@@ -17,21 +17,11 @@ export default class Component {
         this.children.push(...children);
     }
 
-    initState() {
-        // Override this method in subclasses to initialize state
-        return {};
-    }
-
     async render() {
         // Override this method in subclasses to define what the component renders
         return '';
     }
 
-    async setState(newState) {
-        this.state = { ...this.state, ...newState };
-        // Re-render the component whenever state changes
-        await this.update();
-    }
 
     async update(data) {
         // Diff the old and new virtual nodes and patch the real DOM with the changes
