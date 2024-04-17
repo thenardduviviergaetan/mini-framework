@@ -22,7 +22,7 @@ export default class List extends Component {
         this.props.className = "list";
         this.memoryChildren = [];
         this.domNode = render(this);
-        this.counter = new Counter({ id: "counter", className: "todo-count"  });
+        this.counter = new Counter({ id: "counter", className: "todo-count" });
         this.footer = { displayed: false, node: null }
     }
 
@@ -40,7 +40,7 @@ export default class List extends Component {
         if (!this.footer.displayed && this.memoryChildren.length > 0) {
             rootNode.after(this.footer.node)
             this.footer.displayed = true
-        }else if (this.memoryChildren.length === 0) {
+        } else if (this.memoryChildren.length === 0) {
             this.footer.node.remove()
             this.footer.displayed = false
         }
@@ -101,8 +101,10 @@ export default class List extends Component {
                     element.parent.refresh();
                 }
             });
+            this.setFilter()
             return;
         }
+     
         this.children.forEach(element => {
             setCheck(!element.checked());
             const arr = element.props.className.split(' ');
@@ -114,8 +116,19 @@ export default class List extends Component {
             element.children.forEach(child => child.children.forEach(input => {
                 if (input.props.type = "checkbox") input.props.checked = element.state;
             }));
-            element.parent.refresh();
+            this.setFilter()
+            // element.parent.refresh();
         });
+    }
+
+    setFilter(){
+        if (window.location.hash === "#/completed") {
+            this.filterChild(true)
+        } else if (window.location.hash === "#/active") {
+            this.filterChild(false)
+        } else {
+            this.filterChild('all')
+        }
     }
 
     /**
@@ -218,21 +231,17 @@ class ListElement extends Component {
             this.setChecked(!this.checked());
             const arr = this.props.className.split(' ');
             if (this.checked()) {
-                if (this.checked()) {
-                    arr.push("completed")
-                } else {
-                    arr.pop()
-                }
+                arr.push("completed");
             } else {
-                if (this.checked()) {
-                    arr.push("completed")
-                } else {
-                    arr.pop()
+                const index = arr.indexOf("completed");
+                if (index > -1) {
+                    arr.splice(index, 1);
                 }
             }
             this.props.className = arr.join(' ');
             input.props.checked = !input.props.checked;
-            this.parent.refresh();
+
+            this.parent.setFilter()
         })
         input.props.checked = typeof this.checked === "function" ? this.checked() : false;
         const button = new Component("button", { className: "destroy" }, ["X"])
