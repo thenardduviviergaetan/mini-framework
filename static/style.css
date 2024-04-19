@@ -199,7 +199,8 @@ form {
 .link:hover {
   color: var(--secondary-color);
 }
-.link:focus {
+
+.inputFocused {
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
   border-radius: 4px;

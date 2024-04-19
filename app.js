@@ -11,11 +11,11 @@ const win = new Framework()
 
 
 // Create the Header Component
-const header = new Component("header", { id: "header","data-testid":"header"})
-const title = new Component("h1",{}, ["todos"])
-const input = new Input({ id: "todo-input", className:'new-todo', placeholder: "What needs to be done?", name: "task", type: "text", 'data-testid': "text-input" })
-const checkAll = new Input({ id: "checkAll", type: "button",value:"Check all"})
-const form = new Form({ className:"input-container" }, checkAll, input)
+const header = new Component("header", { id: "header", "data-testid": "header" })
+const title = new Component("h1", {}, ["todos"])
+const input = new Input({ id: "todo-input", className: 'new-todo', placeholder: "What needs to be done?", name: "task", type: "text", 'data-testid': "text-input" })
+const checkAll = new Input({ id: "checkAll", type: "button", value: "Check all" })
+const form = new Form({ className: "input-container" }, checkAll, input)
 form.actionListener("submit", (e) => {
     const task = getFormValues(e).task;
     list.update(task, list.counter)
@@ -24,9 +24,9 @@ header.addElement(title, form)
 win.addComponent(header)
 
 // Create the Main Component
-const main = new Component("main", { id: "main","data-testid":"main"})
+const main = new Component("main", { id: "main", "data-testid": "main" })
 const list = new List({ id: "list", className: 'todo-list', 'data-testid': 'todo-list' })
-checkAll.actionListener('click', ()=>{
+checkAll.actionListener('click', () => {
     list.checkAll()
 })
 main.addElement(list)
@@ -46,8 +46,8 @@ clear.actionListener('click', () => {
 
 win.setRoutes([
     ["/", () => { list.all() }, link],
-    ["/#/active", () => { list.filterChild(false)}, link2],
-    ["/#/completed", () => [ list.filterChild(true)], link3]
+    ["/#/active", () => { list.active() }, link2],
+    ["/#/completed", () => [list.completed()], link3]
 ])
 
 linkBox.addElement(link, link2, link3)
@@ -56,7 +56,7 @@ listFooter.addElement(list.counter, linkBox, clear)
 list.addFooter(render(listFooter))
 
 // Create the Footer Component
-const footer = new Component("footer", { className: "info","data-testid": "footer" })
+const footer = new Component("footer", { className: "info", "data-testid": "footer" })
 const p1 = new Component("p", {}, ["Double-click to edit a todo"])
 const p2 = new Component("p", {}, ["Created by Dream Team"])
 const p3 = new Component("p", {}, ["Part of mini-framework project"])

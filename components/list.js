@@ -4,7 +4,6 @@ import { useState } from "../framework/hooks.js"
 import Input from "./input.js"
 import Form from "./form.js"
 import Counter from "./counter.js"
-import Link from "./link.js"
 
 /**
  * Represents a List component.
@@ -24,6 +23,14 @@ export default class List extends Component {
         this.domNode = render(this);
         this.counter = new Counter({ id: "counter", className: "todo-count" });
         this.footer = { displayed: false, node: null }
+        this.filterState = () => { }
+        this.setFilter = () => { }
+
+        this._launchState()
+    }
+
+    _launchState() {
+        [this.filterState, this.setFilter] = useState('all')
     }
 
     /**
@@ -31,27 +38,27 @@ export default class List extends Component {
      * @async
      * @param {Function} callback - The callback function to be executed before updating the DOM.
      */
-    async updateDOM(callback) {
-        this.oldNode = this.domNode;
-        callback();
-        const patches = diff(this.oldNode, this);
-        const rootNode = document.getElementById(this.props.id);
+    async updateDOM(callback = () => { }) {
+        this.oldNode = this.domNode
 
-        if (!this.footer.displayed && this.memoryChildren.length > 0) {
-            rootNode.after(this.footer.node)
-            this.footer.displayed = true
-        } else if (this.memoryChildren.length === 0) {
-            this.footer.node.remove()
-            this.footer.displayed = false
-        }
+        callback()
+        this.filterChild()
+
+        const patches = diff(this.oldNode, this)
+        const rootNode = document.getElementById(this.props.id)
+
+        // Adding or removing header
+        this.showFooter(rootNode)
 
         await patch(rootNode, patches);
         this.domNode = render(this);
+
         if (this.footer.displayed) {
             this.counter.updateCount(this.memoryChildren.filter((element) => {
-                return !element.checked();
+                return !element.checked()
             }).length);
         }
+
     }
 
     /**
@@ -63,14 +70,34 @@ export default class List extends Component {
     async update(task, counter) {
         this.counter = counter;
         this.updateDOM(() => {
-            const element = new ListElement(task, this);
-            this.children.push(element);
-            this.memoryChildren.push(element);
-        });
+            const element = new ListElement(task, this)
+            this.children.push(element)
+            this.memoryChildren.push(element)
+        })
     }
 
+    /**
+     * Sets the ListFooter node so it can be rendered later.
+     * @param {Object} footer - A Component containing all the subComponents for the footer.
+     */
     addFooter(footer) {
         this.footer.node = footer
+        this.setActiveButton('All')
+    }
+
+    /**
+     * Checks if the List Footer should be shown depending on List Childrens.
+     * @param {Node} rootNode - Parent node of the List.
+     */
+    showFooter(rootNode) {
+        if (!this.footer.displayed && this.memoryChildren.length > 0) {
+            rootNode.after(this.footer.node)
+            this.footer.displayed = true
+
+        } else if (this.footer.displayed && this.memoryChildren.length === 0) {
+            this.footer.node.remove()
+            this.footer.displayed = false
+        }
     }
 
     /**
@@ -78,57 +105,33 @@ export default class List extends Component {
      * @async
      */
     async refresh() {
-        this.updateDOM(() => { });
+        this.updateDOM();
     }
 
     /**
      * Checks all the List elements.
      */
     checkAll() {
-        const [checkState, setCheck] = useState(false);
+        const state = this.children.some(element => !element.props.className.includes("completed"))
 
-
-        if (this.children.some(element => !element.props.className.includes("completed"))) {
-            this.children.forEach((element) => {
-                if (!element.props.className.includes("completed")) {
-                    setCheck(!element.checked());
-                    element.setChecked(checkState());
-                    const arr = element.props.className.split(' ');
-                    arr.push("completed");
-                    element.props.className = arr.join(' ');
-
-                    element.children.forEach(child => child.children.forEach(input => { if (input.props.type = "checkbox") input.props.checked = true; }));
-                    element.parent.refresh();
+        if (state) {
+            this.children.forEach((child) => {
+                if (!child.props.className.includes('completed')) {
+                    child.setChecked(true)
+                    child.props.className += ' completed'
+                    child.children[0].children[0].props.checked = true
+                    this.refresh()
                 }
-            });
-            this.setFilter()
-            return;
-        }
-     
-        this.children.forEach(element => {
-            setCheck(!element.checked());
-            const arr = element.props.className.split(' ');
-            element.setChecked(checkState());
-            checkState() ? element.checked() ? arr.push("completed") : arr.pop() : !element.checked() ? arr.pop() : arr.push("completed");
-
-
-            element.props.className = arr.join(' ');
-            element.children.forEach(child => child.children.forEach(input => {
-                if (input.props.type = "checkbox") input.props.checked = element.state;
-            }));
-            this.setFilter()
-            // element.parent.refresh();
-        });
-    }
-
-    setFilter(){
-        if (window.location.hash === "#/completed") {
-            this.filterChild(true)
-        } else if (window.location.hash === "#/active") {
-            this.filterChild(false)
+            })
         } else {
-            this.filterChild('all')
+            this.children.forEach((child) => {
+                child.setChecked(false)
+                child.props.className = child.props.className.replace('completed', '')
+                child.children[0].children[0].props.checked = false
+                this.refresh()
+            })
         }
+
     }
 
     /**
@@ -136,22 +139,20 @@ export default class List extends Component {
      * @async
      * @param {string} filtersState - The state of the filters to be applied.
      */
-    async filterChild(filtersState) {
-        if (this.memoryChildren.length === 0) return
+    filterChild() {
+        this.oldNode = this.domNode;
+        this.children = [];
 
-        this.updateDOM(() => {
-            this.oldNode = this.domNode;
-            this.children = [];
-            if (filtersState !== "all") {
-                this.memoryChildren.forEach((element) => {
-                    if (element.checked() === filtersState) {
-                        this.children.push(element);
-                    }
-                });
-            } else {
-                this.children = [...this.memoryChildren];
+        if (this.filterState() === "all") {
+            this.children = [...this.memoryChildren];
+            return
+        }
+
+        this.memoryChildren.forEach((element) => {
+            if (element.checked() === this.filterState()) {
+                this.children.push(element)
             }
-        });
+        })
     }
 
     /**
@@ -174,24 +175,41 @@ export default class List extends Component {
      * Filters the List elements to show all elements.
      */
     all() {
-        this.filterChild('all');
+        // console.log("Filtering ALL");
+        this.setFilter('all')
+        this.setActiveButton("All")
+        this.updateDOM()
     }
 
     /**
      * Filters the List elements to show completed elements.
      */
     completed() {
-        this.filterChild(true);
+        // console.log("Filtering COMPLETED");
+        this.setFilter(true)
+        this.setActiveButton("Completed")
+        this.updateDOM()
     }
 
     /**
      * Filters the List elements to show active elements.
      */
     active() {
-        this.filterChild(false);
+        // console.log("Filtering ACTIVE");
+        this.setFilter(false)
+        this.setActiveButton("Active")
+        this.updateDOM()
+    }
+
+    setActiveButton(buttonName) {
+        if (this.footer.node) {
+            for (const child of this.footer.node.children[1].children) {
+                if (child.getAttribute('content') === buttonName) child.classList.add("inputFocused")
+                else child.classList.remove("inputFocused")
+            }
+        }
     }
 }
-
 /**
  * Represents a list element component.
  * @class
@@ -208,6 +226,7 @@ class ListElement extends Component {
         [this.checked, this.setChecked] = useState(false)
         this.init()
     }
+
     init() {
         this.actionListener("dblclick", () => {
             const input = new Input({ type: "text", name: "liUpdate", value: this.content })
@@ -240,8 +259,8 @@ class ListElement extends Component {
             }
             this.props.className = arr.join(' ');
             input.props.checked = !input.props.checked;
-
-            this.parent.setFilter()
+            this.parent.refresh()
+            // this.parent.setFilter()
         })
         input.props.checked = typeof this.checked === "function" ? this.checked() : false;
         const button = new Component("button", { className: "destroy" }, ["X"])
@@ -249,8 +268,6 @@ class ListElement extends Component {
         div.addElement(input, label, button)
         return [div]
     }
-
-
 
     async destroy() {
         this.domNode.remove();
